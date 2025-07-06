@@ -5,27 +5,28 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class Auth {
-  private apiUrl = 'http://localhost:8000/api';
+  private apiUrl = '/api';  
 
-    constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {}
 
-    login(credentials: { username: string; password: string }) {
-      return this.http.post(`${this.apiUrl}/login/`, credentials);
-    }
+  login(credentials: { username: string; password: string }) {
+    return this.http.post(`${this.apiUrl}/login/`, credentials);
+  }
 
-    register(data: { username: string; password: string; email: string }) {
-      return this.http.post(`${this.apiUrl}/register/`, data);
-    }
+  register(data: { username: string; password: string; email: string }) {
+    return this.http.post(`${this.apiUrl}/register/`, data);
+  }
 
-    guardarToken(token: string) {
-      localStorage.setItem('token', token);
-    }
+  guardarToken(token: string) {
+    localStorage.setItem('token', token);
+  }
 
-    obtenerToken() {
-      return localStorage.getItem('token');
-    }
+  obtenerToken() {
+    return localStorage.getItem('token');
+  }
 
-    cerrarSesion() {
-      localStorage.removeItem('token');
+  cerrarSesion() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
   }
 }
