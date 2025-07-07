@@ -15,11 +15,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from django.urls import re_path
+from django.urls import path, re_path
 from gestion.views import angular_app
+from gestion import views 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    re_path(r'^.*$', angular_app),  # Para SPA
+    path('api/citas/', views.crear_cita, name='crear_cita'),
+    re_path(r'^.*$', angular_app),  # Catch-all para la SPA Angular al final
 ]
