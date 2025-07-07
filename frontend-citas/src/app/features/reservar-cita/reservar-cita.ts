@@ -32,7 +32,7 @@ export class ReservarCitaComponent {
       hora: this.selectedHora
     };
 
-    this.http.post('http://localhost:4200/reservar-cita', cita).subscribe({
+    this.http.post('http://localhost:8000/api/citas/', cita).subscribe({
       next: () => {
         this.mensaje = '✅ Cita reservada con éxito.';
       },

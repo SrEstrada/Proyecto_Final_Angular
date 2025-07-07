@@ -4,7 +4,8 @@ import { Nosotros } from './pages/nosotros/nosotros';
 import { ReservarCitaComponent } from './features/reservar-cita/reservar-cita';
 
 export const routes: Routes = [
-    { path: '', component: Home },
-    { path: 'nosotros', component: Nosotros },
-    { path: 'reservar-cita', component: ReservarCitaComponent }
+  { path: '', component: Home },
+  { path: 'nosotros', component: Nosotros },
+  { path: 'reservar-cita', component: ReservarCitaComponent },
+  { path: '**', redirectTo: '' }  // redirige cualquier otra ruta a home
 ];
