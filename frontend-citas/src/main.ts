@@ -4,9 +4,38 @@ import { App } from './app/app';
 import { provideRouter } from '@angular/router';
 import { routes } from './app/app.routes';
 import { provideHttpClient } from '@angular/common/http';
+import { CsrfInterceptor } from './app/services/csrf-interceptor';
+import { withInterceptors } from '@angular/common/http';
 
 bootstrapApplication(App, {
-  providers: [provideRouter(routes),
-    provideHttpClient()
+  providers: [
+    provideRouter(routes),
+    provideHttpClient(withInterceptors([
+      (req, next) => {
+        const getToken = (): string | null => {
+          const cookies = document.cookie.split(';');
+          for (const cookie of cookies) {
+            const [name, value] = cookie.trim().split('=');
+            if (name === 'csrftoken') {
+              return decodeURIComponent(value);
+            }
+          }
+          return null;
+        };
+
+        const token = getToken();
+
+        if (token && ['POST', 'PUT', 'DELETE'].includes(req.method)) {
+          req = req.clone({
+            withCredentials: true,
+            setHeaders: {
+              'X-CSRFToken': token
+            }
+          });
+        }
+
+        return next(req); // ✅ en Angular 17+ se llama directamente
+      }
+    ])),
   ],
 });
