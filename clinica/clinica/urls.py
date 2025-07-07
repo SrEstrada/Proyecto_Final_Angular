@@ -18,8 +18,10 @@ from django.contrib import admin
 from django.urls import path
 from django.urls import re_path
 from gestion.views import angular_app
+from django.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include('gestion.urls')), 
     re_path(r'^.*$', angular_app),  # Para SPA
 ]
