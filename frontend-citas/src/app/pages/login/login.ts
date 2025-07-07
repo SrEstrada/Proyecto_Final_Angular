@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.html',
   styleUrl: './login.css'
@@ -20,13 +21,16 @@ export class Login {
   login() {
     this.auth.login({ username: this.username, password: this.password }).subscribe({
       next: (res: any) => {
-        this.auth.guardarToken(res.access);
-        localStorage.setItem('username', this.username);
+        // Guarda token y nombre
+        this.auth.guardarToken(res.access, this.username);
         this.mensaje = 'Login exitoso';
-        location.href = '/';  // redirigir al inicio
+
+        // Redirige al home
+        location.href = '/';
       },
-      error: err => this.mensaje = 'Error de login'
+      error: err => {
+        this.mensaje = 'Error de login';
+      }
     });
   }
-
 }

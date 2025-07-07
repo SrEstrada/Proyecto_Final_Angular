@@ -34,7 +34,7 @@ bootstrapApplication(App, {
           });
         }
 
-        return next(req); // ✅ en Angular 17+ se llama directamente
+        return next(req); 
       }
     ])),
   ],
