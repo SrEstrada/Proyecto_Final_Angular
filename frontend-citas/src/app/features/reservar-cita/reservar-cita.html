@@ -1,1 +1,23 @@
-<p>reservar-cita works!</p>
+<h2>Reservar una cita médica</h2>
+
+<div class="form-container">
+  <label>Especialidad:</label>
+  <select [(ngModel)]="selectedEspecialidad">
+    <option value="" disabled selected>Seleccione una especialidad</option>
+    <option *ngFor="let esp of especialidades" [value]="esp">{{ esp }}</option>
+  </select>
+
+  <label>Fecha:</label>
+  <input type="date" [(ngModel)]="selectedFecha" />
+
+  <label>Hora:</label>
+  <select [(ngModel)]="selectedHora">
+    <option value="" disabled selected>Seleccione una hora</option>
+    <option *ngFor="let hora of horarios" [value]="hora">{{ hora }}</option>
+  </select>
+
+  <button (click)="reservarCita()">Reservar cita</button>
+
+  <p class="mensaje">{{ mensaje }}</p>
+</div>
+
