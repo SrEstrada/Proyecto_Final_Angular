@@ -1,0 +1,15 @@
+<h2>Seleccionar Especialidad</h2>
+
+<select [(ngModel)]="especialidadSeleccionada" (change)="buscarMedicos()">
+  <option [value]="0">-- Selecciona una especialidad --</option>
+  <option *ngFor="let esp of especialidades" [value]="esp.id">{{ esp.nombre }}</option>
+</select>
+
+<div *ngIf="medicos.length > 0">
+  <h3>Médicos disponibles:</h3>
+  <ul>
+    <li *ngFor="let medico of medicos">
+      {{ medico.nombres }} - {{ medico.correo }}
+    </li>
+  </ul>
+</div>
