@@ -148,3 +148,11 @@ CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:4200",
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'sandbox.smtp.mailtrap.io'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = '22eb3b11fb949c'  
+EMAIL_HOST_PASSWORD = '032eab2fce1893'  
+DEFAULT_FROM_EMAIL = 'notificaciones@citasmedicas.com'

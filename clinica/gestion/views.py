@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from django.core.mail import send_mail
 
 # Create your views here.
 def angular_app(request):
@@ -20,5 +21,18 @@ def register_user(request):
     if User.objects.filter(username=username).exists():
         return Response({'error': 'El usuario ya existe'}, status=status.HTTP_400_BAD_REQUEST)
 
-    User.objects.create_user(username=username, password=password, email=email)
+    user = User.objects.create_user(username=username, password=password, email=email)
+
+    # ✅ Envío de correo de confirmación
+    try:
+        send_mail(
+            subject='Registro exitoso en Citas Médicas',
+            message=f'Hola {username}, tu registro fue completado exitosamente.',
+            from_email='notificaciones@citasmedicas.com',  # Usa el mismo que pusiste en settings.py
+            recipient_list=[email],
+            fail_silently=False,
+        )
+    except Exception as e:
+        return Response({'error': f'Usuario creado, pero hubo un error al enviar el correo: {str(e)}'}, status=201)
+
     return Response({'message': 'Usuario creado correctamente'}, status=status.HTTP_201_CREATED)
