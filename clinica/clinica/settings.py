@@ -133,6 +133,9 @@ STATICFILES_DIRS = [
 TEMPLATES[0]['DIRS'] = [
     os.path.join(BASE_DIR, 'gestion/templates')
 ]
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:4200',
+]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -156,3 +159,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = '22eb3b11fb949c'  
 EMAIL_HOST_PASSWORD = '032eab2fce1893'  
 DEFAULT_FROM_EMAIL = 'notificaciones@citasmedicas.com'
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    ]
+}

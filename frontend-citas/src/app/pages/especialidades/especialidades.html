@@ -1,0 +1,32 @@
+<h2>Seleccionar Especialidad</h2>
+
+<select [(ngModel)]="especialidadSeleccionada" (change)="buscarMedicos()">
+  <option [value]="0">-- Selecciona una especialidad --</option>
+  <option *ngFor="let esp of especialidades" [value]="esp.id">{{ esp.nombre }}</option>
+</select>
+
+<form (ngSubmit)="crearEspecialidad()" #form="ngForm">
+  <input
+    type="text"
+    name="nuevaEspecialidad"
+    [(ngModel)]="nuevaEspecialidad"
+    placeholder="Nueva especialidad"
+    required
+  />
+  <button type="submit">Agregar</button>
+</form>
+<ul>
+  <li *ngFor="let esp of especialidades">
+    {{ esp.nombre }}
+    <button (click)="eliminarEspecialidad(esp.id)">🗑️ Eliminar</button>
+  </li>
+</ul>
+
+<div *ngIf="medicos.length > 0">
+  <h3>Médicos disponibles:</h3>
+  <ul>
+    <li *ngFor="let medico of medicos">
+      {{ medico.nombres }} - {{ medico.correo }}
+    </li>
+  </ul>
+</div>
