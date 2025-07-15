@@ -1,2 +1,4 @@
 # Ignorar el entorno virtual
 env/
+echo "__pycache__/" >> .gitignore
+echo "*.pyc" >> .gitignore
