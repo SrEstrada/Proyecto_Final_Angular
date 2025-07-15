@@ -14,7 +14,7 @@ export class EspecialidadService {
     return this.http.get<any[]>(`${this.baseUrl}/especialidades/`);
   }
 
-  getMedicosPorEspecialidad(especialidadId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.baseUrl}/medicos/?especialidad=${especialidadId}`);
+  getMedicosPorEspecialidad(id: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/medicos/?especialidad=${id}`);
   }
 }
