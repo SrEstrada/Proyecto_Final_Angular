@@ -5,6 +5,23 @@
   <option *ngFor="let esp of especialidades" [value]="esp.id">{{ esp.nombre }}</option>
 </select>
 
+<form (ngSubmit)="crearEspecialidad()" #form="ngForm">
+  <input
+    type="text"
+    name="nuevaEspecialidad"
+    [(ngModel)]="nuevaEspecialidad"
+    placeholder="Nueva especialidad"
+    required
+  />
+  <button type="submit">Agregar</button>
+</form>
+<ul>
+  <li *ngFor="let esp of especialidades">
+    {{ esp.nombre }}
+    <button (click)="eliminarEspecialidad(esp.id)">🗑️ Eliminar</button>
+  </li>
+</ul>
+
 <div *ngIf="medicos.length > 0">
   <h3>Médicos disponibles:</h3>
   <ul>

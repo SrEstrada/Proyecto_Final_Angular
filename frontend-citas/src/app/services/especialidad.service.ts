@@ -17,4 +17,13 @@ export class EspecialidadService {
   getMedicosPorEspecialidad(id: number): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/medicos/?especialidad=${id}`);
   }
+  crearEspecialidad(nombre: string): Observable<any> {
+  return this.http.post(`${this.baseUrl}/especialidades/crear/`, {
+    nombre
+  });
+  }
+
+  eliminarEspecialidad(id: number): Observable<any> {
+    return this.http.delete(`${this.baseUrl}/especialidades/${id}/eliminar/`);
+  }
 }

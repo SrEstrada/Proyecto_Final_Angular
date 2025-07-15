@@ -14,6 +14,7 @@ export class Especialidades implements OnInit {
   especialidades: any[] = [];
   medicos: any[] = [];
   especialidadSeleccionada: number = 0;
+  nuevaEspecialidad: string = '';
 
   constructor(private servicio: EspecialidadService) {}
 
@@ -31,5 +32,25 @@ export class Especialidades implements OnInit {
     } else {
       this.medicos = [];
     }
+  }
+    cargarEspecialidades(): void {
+    this.servicio.getEspecialidades().subscribe(data => {
+      this.especialidades = data;
+    });
+  }
+
+  crearEspecialidad(): void {
+    if (this.nuevaEspecialidad.trim() === '') return;
+
+    this.servicio.crearEspecialidad(this.nuevaEspecialidad).subscribe(() => {
+      this.nuevaEspecialidad = '';
+      this.cargarEspecialidades();
+    });
+  }
+
+  eliminarEspecialidad(id: number): void {
+    this.servicio.eliminarEspecialidad(id).subscribe(() => {
+      this.cargarEspecialidades();
+    });
   }
 }
