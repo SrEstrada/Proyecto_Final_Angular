@@ -3,6 +3,8 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import Especialidad, Medico
 from .serializers import EspecialidadSerializer, MedicoSerializer
+from rest_framework import viewsets
+
 
 
 # Create your views here.
@@ -21,3 +23,7 @@ def medicos_por_especialidad(request):
     medicos = Medico.objects.filter(especialidad_id=especialidad_id)
     serializer = MedicoSerializer(medicos, many=True)
     return Response(serializer.data)
+
+class EspecialidadViewSet(viewsets.ModelViewSet):
+    queryset = Especialidad.objects.all()
+    serializer_class = EspecialidadSerializer
