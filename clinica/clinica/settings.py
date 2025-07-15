@@ -40,9 +40,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'gestion',
     'rest_framework',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -124,6 +126,9 @@ STATICFILES_DIRS = [
 
 TEMPLATES[0]['DIRS'] = [
     os.path.join(BASE_DIR, 'gestion/templates')
+]
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:4200',
 ]
 
 # Default primary key field type
