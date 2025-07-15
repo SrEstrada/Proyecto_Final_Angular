@@ -4,6 +4,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.mail import send_mail
+from django.urls import reverse
 
 # Create your views here.
 def angular_app(request):
@@ -22,6 +23,9 @@ def register_user(request):
         return Response({'error': 'El usuario ya existe'}, status=status.HTTP_400_BAD_REQUEST)
 
     user = User.objects.create_user(username=username, password=password, email=email)
+
+    # 🔁 Generar URL completa a la vista de login
+    login_url = request.build_absolute_uri(reverse('api_login'))
 
     # ✅ Envío de correo de confirmación
     try:
