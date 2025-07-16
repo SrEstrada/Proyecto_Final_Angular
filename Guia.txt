@@ -1,9 +1,18 @@
-clonar repositorio /ahora con gitignore en caso tengas el entorno:
-Remove-Item -Recurse -Force env
+AL CLONAR REPOSITORIO CREAR ENTORNO ENV
 
-python -m venv env
-./env/Scripts/actívate
-pip install django
-python -m django --versión
+clonar repositorio /ahora con gitignore en caso tengas el entorno:
+> Remove-Item -Recurse -Force env
+
+> cd ../Proyecto../clinica/
+> python -m venv env
+> ./env/Scripts/activate
 // python -m pip install --upgrade pip
+> python --versión
+> pip install django
+> pip freeze
+> pip install djangorestframework
+> pip install django-cors-headers
+> pip install djangorestframework-simplejwt
+
 python manage.py runserver 127.0.0.1:8147
+
