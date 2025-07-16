@@ -12,7 +12,9 @@ bootstrapApplication(App, {
     provideRouter(routes),
     provideHttpClient(withInterceptors([
       (req, next) => {
-        const getToken = (): string | null => {
+        const jwtToken = localStorage.getItem('token');
+
+        const getCsrfToken = (): string | null => {
           const cookies = document.cookie.split(';');
           for (const cookie of cookies) {
             const [name, value] = cookie.trim().split('=');
@@ -23,18 +25,25 @@ bootstrapApplication(App, {
           return null;
         };
 
-        const token = getToken();
+        const csrfToken = getCsrfToken();
 
-        if (token && ['POST', 'PUT', 'DELETE'].includes(req.method)) {
-          req = req.clone({
-            withCredentials: true,
-            setHeaders: {
-              'X-CSRFToken': token
-            }
-          });
+        // Construir headers combinados
+        const headers: Record<string, string> = {};
+
+        if (jwtToken) {
+          headers['Authorization'] = `Bearer ${jwtToken}`;
         }
 
-        return next(req); 
+        if (csrfToken && ['POST', 'PUT', 'DELETE'].includes(req.method)) {
+          headers['X-CSRFToken'] = csrfToken;
+        }
+
+        req = req.clone({
+          withCredentials: true,
+          setHeaders: headers
+        });
+
+        return next(req);
       }
     ])),
   ],

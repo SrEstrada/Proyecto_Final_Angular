@@ -47,6 +47,9 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+    ]
 }
 
 MIDDLEWARE = [
@@ -143,13 +146,16 @@ CORS_ALLOWED_ORIGINS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:4200",
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
+    'http://localhost:4200',
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:4200",
+    'http://localhost:8000',
+    'http://127.0.0.1:8000',
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -159,8 +165,4 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = '22eb3b11fb949c'  
 EMAIL_HOST_PASSWORD = '032eab2fce1893'  
 DEFAULT_FROM_EMAIL = 'notificaciones@citasmedicas.com'
-REST_FRAMEWORK = {
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
-    ]
-}
+

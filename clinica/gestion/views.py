@@ -12,7 +12,8 @@ from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
-
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 def angular_app(request):
@@ -73,6 +74,7 @@ def listar_especialidades(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def crear_especialidad(request):
     serializer = EspecialidadSerializer(data=request.data)
     if serializer.is_valid():
