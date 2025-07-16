@@ -24,6 +24,11 @@ git reset --hard origin/main
 TRABAJA DESDE CUALQUIER MAQUINA
 conectar nueva rama creada con credenciales nuevas del ordenador
 
+Descargar Git
+> winget install --id Git.Git -e --source winget
+// Agrega path en variables de entorno
+   C:\Program Files\Git\bin
+
 Borrar credenciales manualmente desde terminal:
 > cmdkey /list
 > cmdkey /delete:git:https://github.com
