@@ -1,5 +1,6 @@
 AL CLONAR REPOSITORIO CREAR ENTORNO ENV
 
+BACKEND
 clonar repositorio /ahora con gitignore en caso tengas el entorno:
 > Remove-Item -Recurse -Force env
 
@@ -13,13 +14,24 @@ clonar repositorio /ahora con gitignore en caso tengas el entorno:
 > pip install djangorestframework
 > pip install django-cors-headers
 > pip install djangorestframework-simplejwt
+> python manage.py runserver 127.0.0.1:8147
 
-python manage.py runserver 127.0.0.1:8147
+FRONTEND
+> cd ../Proyecto../frontend-citas/
+> npm install
+> npm install -g @angular/cli@20.0.5
+> npm run start    para ng serve
+//> npm run build  
+
+
+
 
 HACER QUE TU RAMA TENGA EL MISMO CONTENIDO QUE EL MAIN
 git checkout TuRama
 git reset --hard origin/main
 			|_______ Rama a la que quieras que sea identica
+
+
 
 TRABAJA DESDE CUALQUIER MAQUINA
 conectar nueva rama creada con credenciales nuevas del ordenador
@@ -40,4 +52,21 @@ O si quieres crearla tú y aún no está en GitHub:
 
 > git push -u origin main ( o TuRama para seguir trabajando con ella)
 iniciar sesion con nombre de usuario y token personal generado
+
+
+
+RAMA INFOUSER
+
+FRONTEND
+> ng generate component pages/miscitas --standalone --flat --skip-tests
+> ng generate component pages/miperfil --standalone --flat --skip-tests
+
+modificación de app.routes.ts
+Se añadieron rutas para miscitas y miperfil usando loadComponent, que es la forma recomendada para componentes standalone lazy-loaded.
+No se modificó nada del resto de tus rutas existentes (home, login, etc.), ya que esas siguen cargándose normalmente.
+
+modificación de auth.ts
+Nuevos métodos para /api/user/ y /api/citas/
+
+
 

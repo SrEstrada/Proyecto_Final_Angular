@@ -4,6 +4,6 @@ echo "__pycache__/" >> .gitignore
 echo "*.pyc" >> .gitignore
 echo "clinica/db.sqlite3" >> .gitignore
 
-__pycache__/
+__pycache__/*.pyc
 *.pyc
 *.sqlite3

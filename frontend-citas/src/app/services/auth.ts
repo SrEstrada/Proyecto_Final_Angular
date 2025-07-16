@@ -49,7 +49,20 @@ export class Auth {
   estaAutenticado(): boolean {
     return !!this.obtenerToken();
   }
+  
   obtenerRefreshToken(): string | null {
     return localStorage.getItem('refresh');
   }
+
+  obtenerUsuario() {
+    return this.http.get(`${this.apiUrl}/user/`, {
+      withCredentials: true
+    });
+  }
+
+  obtenerCitas() {
+    return this.http.get(`${this.apiUrl}/citas/`, {
+      withCredentials: true
+    });
+  } 
 }
