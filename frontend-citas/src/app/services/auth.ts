@@ -11,11 +11,12 @@ export class Auth {
   constructor(private http: HttpClient) {}
 
   login(credentials: { username: string; password: string }) {
-    return this.http.post<{ access: string }>(`${this.apiUrl}/login/`, credentials, {
-      withCredentials: true
-    }).pipe(
+    return this.http.post<{ access: string; refresh: string }>(
+      `${this.apiUrl}/token/`, // ← Este es el endpoint de SimpleJWT
+      credentials
+    ).pipe(
       tap(response => {
-        this.guardarToken(response.access, credentials.username);
+        this.guardarToken(response.access, response.refresh, credentials.username);
       })
     );
   }
@@ -26,8 +27,9 @@ export class Auth {
     });
   }
 
-  guardarToken(token: string, username: string) {
-    localStorage.setItem('token', token);
+  guardarToken(access: string, refresh: string, username: string) {
+    localStorage.setItem('token', access);
+    localStorage.setItem('refresh', refresh);
     localStorage.setItem('username', username);
   }
 
@@ -46,5 +48,8 @@ export class Auth {
 
   estaAutenticado(): boolean {
     return !!this.obtenerToken();
+  }
+  obtenerRefreshToken(): string | null {
+    return localStorage.getItem('refresh');
   }
 }

@@ -6,11 +6,13 @@ import { routes } from './app/app.routes';
 import { provideHttpClient } from '@angular/common/http';
 import { CsrfInterceptor } from './app/services/csrf-interceptor';
 import { withInterceptors } from '@angular/common/http';
+import { refreshTokenInterceptor } from './app/services/refresh-token.interceptor';
 
 bootstrapApplication(App, {
   providers: [
     provideRouter(routes),
     provideHttpClient(withInterceptors([
+      // Tu interceptor de headers y CSRF
       (req, next) => {
         const jwtToken = localStorage.getItem('token');
 
@@ -26,14 +28,9 @@ bootstrapApplication(App, {
         };
 
         const csrfToken = getCsrfToken();
-
-        // Construir headers combinados
         const headers: Record<string, string> = {};
 
-        if (jwtToken) {
-          headers['Authorization'] = `Bearer ${jwtToken}`;
-        }
-
+        if (jwtToken) headers['Authorization'] = `Bearer ${jwtToken}`;
         if (csrfToken && ['POST', 'PUT', 'DELETE'].includes(req.method)) {
           headers['X-CSRFToken'] = csrfToken;
         }
@@ -44,7 +41,10 @@ bootstrapApplication(App, {
         });
 
         return next(req);
-      }
+      },
+
+      // El nuevo interceptor de refresh token
+      refreshTokenInterceptor
     ])),
   ],
 });

@@ -19,18 +19,16 @@ export class Login {
   constructor(private auth: Auth) {}
 
   login() {
-    this.auth.login({ username: this.username, password: this.password }).subscribe({
-      next: (res: any) => {
-        // Guarda token y nombre
-        this.auth.guardarToken(res.access, this.username);
-        this.mensaje = 'Login exitoso';
-
-        // Redirige al home
-        location.href = '/';
-      },
-      error: err => {
-        this.mensaje = 'Error de login';
-      }
-    });
-  }
+  this.auth.login({ username: this.username, password: this.password }).subscribe({
+    next: (res: { access: string; refresh: string }) => {
+      this.auth.guardarToken(res.access, res.refresh, this.username);
+      this.mensaje = 'Login exitoso';
+      location.href = '/';
+    },
+    error: err => {
+      console.error('Error login:', err);
+      this.mensaje = 'Error de login';
+    }
+  });
+}
 }

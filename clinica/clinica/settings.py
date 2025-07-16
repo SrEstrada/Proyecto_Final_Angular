@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -166,3 +167,10 @@ EMAIL_HOST_USER = '22eb3b11fb949c'
 EMAIL_HOST_PASSWORD = '032eab2fce1893'  
 DEFAULT_FROM_EMAIL = 'notificaciones@citasmedicas.com'
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,  # Opcional
+    'BLACKLIST_AFTER_ROTATION': True,  # Para invalidar refresh tokens usados
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
