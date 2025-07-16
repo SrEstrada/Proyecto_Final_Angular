@@ -22,8 +22,15 @@ export class EspecialidadService {
     nombre
   });
   }
-
   eliminarEspecialidad(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/especialidades/${id}/eliminar/`);
+  }
+  editarEspecialidad(id: number, nombre: string): Observable<any> {
+    return this.http.put(`${this.baseUrl}/especialidades/${id}/editar/`, { nombre });
+  }
+  confirmarEliminar(id: number) {
+    if (confirm('¿Seguro que quieres eliminar esta especialidad?')) {
+      this.eliminarEspecialidad(id);
+    }
   }
 }

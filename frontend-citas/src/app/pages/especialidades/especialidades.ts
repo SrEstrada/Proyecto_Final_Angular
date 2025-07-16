@@ -53,4 +53,9 @@ export class Especialidades implements OnInit {
       this.cargarEspecialidades();
     });
   }
+  confirmarEliminar(id: number): void {
+    if (confirm('¿Seguro que quieres eliminar esta especialidad?')) {
+      this.eliminarEspecialidad(id);
+    }
+  }
 }

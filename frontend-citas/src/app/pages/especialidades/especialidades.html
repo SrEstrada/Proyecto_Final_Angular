@@ -13,12 +13,13 @@
     placeholder="Nueva especialidad"
     required
   />
-  <button type="submit">Agregar</button>
+  <button type="submit" [disabled]="nuevaEspecialidad.trim() === ''">Agregar</button>
 </form>
+
 <ul>
   <li *ngFor="let esp of especialidades">
     {{ esp.nombre }}
-    <button (click)="eliminarEspecialidad(esp.id)">🗑️ Eliminar</button>
+    <button (click)="confirmarEliminar(esp.id)">🗑️ Eliminar</button>
   </li>
 </ul>
 
@@ -29,4 +30,8 @@
       {{ medico.nombres }} - {{ medico.correo }}
     </li>
   </ul>
+</div>
+
+<div *ngIf="medicos.length === 0 && especialidadSeleccionada !== 0">
+  <p>No hay médicos disponibles para esta especialidad.</p>
 </div>

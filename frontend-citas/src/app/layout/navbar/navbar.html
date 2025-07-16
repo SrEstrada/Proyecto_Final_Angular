@@ -2,35 +2,48 @@
   <div class="container">
     <a class="navbar-brand" routerLink="/">Citas Médicas</a>
 
-<<<<<<< HEAD
-    <ul class="navbar-nav ms-auto">
-      <li class="nav-item" *ngIf="!usuarioLogueado">
-        <a class="nav-link" routerLink="/login">Login</a>
-      </li>
-      <li class="nav-item dropdown" *ngIf="usuarioLogueado">
-        <a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown">
-          Bienvenido, {{ nombreUsuario }}
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end">
-          <li><a class="dropdown-item" (click)="cerrarSesion()">Cerrar sesión</a></li>
-        </ul>
-      </li>
-    </ul>
-=======
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav"
+      aria-controls="navbarNav"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
     <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav ms-auto">
+      <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <a class="nav-link" routerLink="/" routerLinkActive="active">Inicio</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/nosotros" routerLinkActive="active">Nosotros</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link" routerLink="/especialidades" routerLinkActive="active">Especialidades</a>
         </li>
-        <!-- futuras opciones -->
+      </ul>
+
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item" *ngIf="!usuarioLogueado">
+          <a class="nav-link" routerLink="/login">Login</a>
+        </li>
+        <li class="nav-item dropdown" *ngIf="usuarioLogueado">
+          <a
+            class="nav-link dropdown-toggle"
+            role="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            Bienvenido, {{ nombreUsuario }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <a class="dropdown-item" (click)="cerrarSesion()">Cerrar sesión</a>
+            </li>
+          </ul>
+        </li>
       </ul>
     </div>
->>>>>>> Sergio
   </div>
 </nav>
