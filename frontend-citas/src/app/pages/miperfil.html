@@ -1,1 +1,14 @@
-<p>miperfil works!</p>
+<div class="p-6">
+  <h2 class="text-2xl font-bold mb-4">Mi Perfil</h2>
+
+  <div *ngIf="usuario" class="bg-white shadow-md rounded-md p-6 border border-gray-200">
+    <p><strong>Nombre:</strong> {{ usuario.nombre }}</p>
+    <p><strong>Correo electrónico:</strong> {{ usuario.email }}</p>
+    <p><strong>Teléfono:</strong> {{ usuario.telefono || 'No registrado' }}</p>
+    <p><strong>Fecha de nacimiento:</strong> {{ usuario.fecha_nacimiento || 'No registrada' }}</p>
+  </div>
+
+  <div *ngIf="!usuario" class="text-gray-500">
+    No se pudo cargar la información del usuario.
+  </div>
+</div>
