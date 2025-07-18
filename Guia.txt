@@ -64,20 +64,89 @@ Cambiar política de educación de scripts, permitirá ejecutar scripts locales 
 > Set-ExecutionPolicy RemoteSigned
 
 
-RAMA INFOUSER
+
+ESTRUCTURA
+
+BACKEND
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\clinica\__pycache__\
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\clinica\__init__.py
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\clinica\asgi.py
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\clinica\settings.py
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\clinica\urls.py
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\clinica\wsgi.py
+
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\env\
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\gestion\__pycache__\
+
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\gestion\migrations\__pycache__
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\gestion\migrations\__init__.py
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\gestion\migrations\0001_initial.py
+
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\gestion\static\angular\
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\gestion\templates\index.html
+
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\gestion\__init__.py
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\gestion\admin.py
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\gestion\app.py
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\gestion\models.py
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\gestion\serialiers.py
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\gestion\test.py
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\gestion\urls.py
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\gestion\views.py
+
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\db.sqlite3
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\clinica\manage.py
+
 
 FRONTEND
-> ng generate component pages/miscitas --standalone --flat --skip-tests
-> ng generate component pages/miperfil --standalone --flat --skip-tests
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\.angular\cache\20.0.5\frontend-citas\vite\
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\.vscode\
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\dist\frontend-citas\browser\
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\node_modules\
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\public\favicon.ico
 
-modificación de app.routes.ts
-Se añadieron rutas para miscitas y miperfil usando loadComponent, que es la forma recomendada para componentes standalone lazy-loaded.
-No se modificó nada del resto de tus rutas existentes (home, login, etc.), ya que esas siguen cargándose normalmente.
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\guards\auth.guard.ts
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\layout\footer\footer.css
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\layout\footer\footer.html
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\layout\footer\footer.spec.ts
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\layout\footer\footer.ts
 
-modificación de auth.ts
-Nuevos métodos para /api/user/ y /api/citas/
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\layout\navbar\navbar.css
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\layout\navbar\navbar.html
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\layout\navbar\navbar.spec.ts
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\layout\navbar\navbar.ts
 
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\especialidades\especialidades.css
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\especialidades\especialidades.html
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\especialidades\especialidades.spec.ts
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\especialidades\especialidades.ts
 
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\home\home.css
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\home\home.html
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\home\home.spec.ts
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\home\home.ts
 
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\login\login.css
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\login\login.html
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\login\login.spec.ts
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\login\login.ts
 
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\miperfil\miperfil.css
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\miperfil\miperfil.html
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\miperfil\miperfil.ts
 
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\nosotros\
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\register\register.css
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\register\register.ts
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\register\register.spec.ts
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\register\register.html
+
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\pages\reservaciones\
+
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\services\auth.spec.ts
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\services\auth.ts
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\services\csrf-interceptor.spec.ts
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\services\csrf-interceptor.ts
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\services\especialidad.service.ts
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\services\jwt-interceptor.ts
+C:\Users\TIJERO\Desktop\verMain\Proyecto_Final_Angular\frontend-citas\src\app\services\refresh-token.interceptor.ts
