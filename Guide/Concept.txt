@@ -1,0 +1,96 @@
+OBJETIVO GENERAL
+Desarrollar una aplicación web full-stack que permita a pacientes reservar citas médicas y a médicos gestionar sus horarios de atención. El sistema contará con autenticación, roles, gestión de horarios y citas, usando Django REST (backend) y Angular 20 standalone (frontend).
+
+
+TECNOLOGIAS UTILIZADAS
+Backend		Django 5 + Django REST Framework
+Base de datos	PostgreSQL
+Frontend	Angular 20.1.0 (standalone components)
+Autenticación	JSON Web Tokens (JWT)
+Despliegue	Local o en servidor (a futuro)
+
+
+
+ROLES DEL SISTEMA
+
+PACIENTE
+> Puede registrarse e iniciar sesión.
+> Puede consultar horarios disponibles de los médicos.
+> Puede reservar una cita en un horario libre.
+> Puede consultar sus citas reservadas.
+> Puede cancelar una cita (opcional).
+
+MÉDICO
+> Inicia sesión (creado por admin o backend).
+> Gestiona sus días y horarios de atención.
+> Consulta citas que los pacientes han reservado.
+> No puede reservar citas (solo ofrece atención).
+
+
+
+FLUJO DE AUTENTICACIÓN (JWT)
+> Usuario se autentica mediante POST /api/login/
+> El backend responde con un token JWT
+> El token se guarda en el frontend (localStorage o memory)
+> Cada request autenticado incluye el header:
+> Authorization: Bearer <TOKEN>
+> El backend verifica el rol y retorna datos según el tipo de usuario.
+
+
+
+FUNCIONALIDADES DETALLADAS
+
+Autenticación
+> Login con JWT
+> Rol incluido en el token para diferenciar vistas
+
+Gestión de horarios (Médico)
+> El médico define en qué días atiende (Lunes, Martes, etc.)
+> Para cada día puede definir varios bloques horarios (ej. 9-10am, 10-11am)
+> Los horarios se guardan como relaciones (HorarioMedico)
+
+Reservación de citas (Paciente)
+El paciente puede:
+> Ver los médicos disponibles
+> Ver los horarios disponibles por día
+> Reservar una cita en un horario libre
+El sistema:
+> Impide reservar en horarios ya tomados
+> Relaciona al paciente con ese horario
+
+Visualización de citas
+> Paciente: Ve todas sus citas pasadas y futuras
+> Médico: Ve las citas que tiene agendadas con pacientes
+
+
+
+FUNCIONAMIENTO EN EL FRONTEND (Angular)
+Navegación condicional según rol:
+
+Si rol === PACIENTE:
+Página de citas (miscitas)
+Página de reservar (reservar)
+Perfil (miperfil)
+
+Si rol === MEDICO:
+Página de horarios (horarios)
+Ver citas agendadas (miscitas)
+Perfil (miperfil)
+
+
+ESTRUCTURA ANGULAR ESPERADA
+/src/app/
+  /pages/
+    login/
+    miscitas/
+    miperfil/
+    reservar/
+    horarios/
+  /services/
+    auth.service.ts
+    usuario.service.ts
+    reservacion.service.ts
+    horario.service.ts
+  /guards/
+    auth.guard.ts
+    role.guard.ts

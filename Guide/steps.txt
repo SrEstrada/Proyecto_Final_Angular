@@ -1,0 +1,65 @@
+LO QUE FALTA PARA TERMINAR LA APLICACIÓN
+
+1. BACKEND DJANGO REST
+a) Modelos completos y migraciones
+ Usuario (con campo rol)
+ Paciente y Medico relacionados con Usuario
+ DiaAtencion, HorarioAtencion
+ HorarioMedico (relación entre Médico y días/horarios)
+ Reservacion (cita entre paciente y horario)
+
+Confirmado que los modelos están definidos correctamente.
+
+b) Serializers
+ UsuarioSerializer para login y registro.
+ MedicoSerializer, PacienteSerializer
+ Serializers anidados para HorarioMedico, DiaAtencion, Reservacion
+
+c) Vistas / ViewSets
+ LoginView con JWT
+ RegisterView (opcional)
+ ReservacionViewSet (listar, crear cita)
+ HorarioMedicoViewSet (crear horarios)
+ MedicoViewSet, PacienteViewSet (perfil, citas asociadas)
+
+d) Permisos personalizados
+ IsPaciente, IsMedico, IsOwner (según rol o dueño de la cita)
+
+e) Endpoints funcionales (URLs)
+ /api/login/ → JWT
+ /api/reservaciones/ → CRUD de citas
+ /api/horarios/ → horarios disponibles
+ /api/usuarios/me/ → perfil autenticado
+
+
+2. FRONTEND ANGULAR 20 (STANDALONE)
+a) Estructura base
+ Standalone components (pages/, components/)
+ Routing con lazy loading (miscitas, miperfil, home, etc.)
+ Guardas (auth.guard.ts, role.guard.ts)
+ Servicio de autenticación con JWT (auth.service.ts)
+
+b) Servicios REST
+ reservacion.service.ts → CRUD de citas
+ medico.service.ts, paciente.service.ts
+ horario.service.ts → ver horarios disponibles
+
+c) Páginas funcionales
+ Login (login.page.ts)
+ Página miscitas → ver citas del paciente
+ Página miperfil → perfil según rol
+ Página reservar → seleccionar médico, horario y confirmar cita
+ Página horarios (solo para médicos) → gestionar horarios
+
+d) Interfaz de usuario (UI)
+ Formularios reactivos (ReactiveForms)
+ Componentes reutilizables (select de horarios, tarjeta de cita)
+ Mostrar errores de validación y autenticación
+ Navegación condicional (menú según rol)
+
+3. TESTEO y VALIDACIÓN
+ Probar creación de citas reales (end-to-end)
+ Login funcional y persistencia con JWT
+ Citas no se repitan en el mismo horario
+ Usuarios no vean información ajena
+
