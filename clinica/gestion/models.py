@@ -87,3 +87,9 @@ class Reservacion(models.Model):
 
     def __str__(self):
         return f"{self.fecha} - {self.paciente} con {self.medico}"
+
+class Especialidad(models.Model):
+    nombre = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.nombre

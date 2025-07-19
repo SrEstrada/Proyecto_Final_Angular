@@ -1,0 +1,33 @@
+creación de modelos en models.py
+
+modificación en settings.py
++ AUTH_USER_MODEL = 'gestion.Usuario'
+
+Registro de modelos en admin.py
+
+> pip install psycopg2-binary
+// > pip install psycopg
+
+> pip freeze
+asgiref==3.9.1
+Django==5.2.4
+django-cors-headers==4.7.0
+djangorestframework==3.16.0
+djangorestframework_simplejwt==5.5.0
+psycopg2-binary==2.9.10
+PyJWT==2.9.0
+sqlparse==0.5.3
+tzdata==2025.2	
+
+Crear data base
+en bash:
+> psql -U postgres
+
+ya en SQLshell:
+> create databae clinicapweb2;
+
+Aplicando migraciones
+> python manage.py makemigrations
+> python manage.py migrate
+
+> python manage.py createsuperuser

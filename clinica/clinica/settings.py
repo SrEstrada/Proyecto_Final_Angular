@@ -33,13 +33,13 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'gestion',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'gestion',
     'rest_framework',
     'corsheaders',
     'rest_framework_simplejwt',
@@ -89,10 +89,15 @@ WSGI_APPLICATION = 'clinica.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'clinicapweb2',
+        'USER': 'postgres',
+        'PASSWORD': '7410',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
 
 AUTH_USER_MODEL = 'gestion.Usuario'
 
