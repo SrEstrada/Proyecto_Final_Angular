@@ -1,8 +1,9 @@
 from django.contrib import admin
-from .models import Especialidad, Medico, Paciente, Cita ,Horario
+from .models import Especialidad, Medico, Paciente, Cita ,Horario, Administrador
 
 admin.site.register(Especialidad)
 admin.site.register(Medico)
 admin.site.register(Paciente)
 admin.site.register(Cita)
 admin.site.register(Horario)
+admin.site.register(Administrador) 

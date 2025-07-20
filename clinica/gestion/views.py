@@ -192,44 +192,23 @@ def reservar_cita(request):
         'especialidad': medico.especialidad.nombre,
     }, status=status.HTTP_201_CREATED)
 
-@api_view(['GET', 'PATCH'])
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def perfil_paciente(request):
-    """Devuelve (GET) o actualiza (PATCH) el perfil del paciente logueado."""
+    """Devuelve datos del paciente logueado (solo lectura)."""
     try:
         paciente = Paciente.objects.select_related('usuario').get(usuario=request.user)
     except Paciente.DoesNotExist:
         return Response({'error': 'No es paciente.'}, status=status.HTTP_403_FORBIDDEN)
 
-    if request.method == 'GET':
-        data = {
-            'username': paciente.usuario.username,
-            'email': paciente.usuario.email,
-            'first_name': paciente.usuario.first_name,
-            'last_name': paciente.usuario.last_name,
-            'telefono': paciente.telefono,
-        }
-        return Response(data)
-
-    # PATCH (actualizar campos opcionales)
-    telefono = request.data.get('telefono')
-    email = request.data.get('email')
-    first = request.data.get('first_name')
-    last = request.data.get('last_name')
-
-    if telefono is not None:
-        paciente.telefono = telefono
-    if email is not None:
-        paciente.usuario.email = email
-    if first is not None:
-        paciente.usuario.first_name = first
-    if last is not None:
-        paciente.usuario.last_name = last
-
-    paciente.usuario.save()
-    paciente.save()
-
-    return Response({'message': 'Perfil actualizado.'})
+    data = {
+        'username': paciente.usuario.username,
+        'email': paciente.usuario.email,
+        'first_name': paciente.usuario.first_name,
+        'last_name': paciente.usuario.last_name,
+        'telefono': paciente.telefono,
+    }
+    return Response(data)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])

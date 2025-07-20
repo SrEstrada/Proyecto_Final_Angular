@@ -41,3 +41,10 @@ class Horario(models.Model):
 
     def __str__(self):
         return f"{self.medico.nombres} - {self.fecha} {self.hora}"
+    
+class Administrador(models.Model):
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE)
+    nombre_mostrar = models.CharField(max_length=150, blank=True)
+
+    def __str__(self):
+        return self.nombre_mostrar or self.usuario.username
