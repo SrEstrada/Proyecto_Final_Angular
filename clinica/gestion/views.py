@@ -14,6 +14,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from .models import Paciente, Medico, Cita
 
 # Create your views here.
 def angular_app(request):
@@ -33,6 +34,9 @@ def register_user(request):
         return Response({'error': 'El usuario ya existe'}, status=status.HTTP_400_BAD_REQUEST)
 
     user = User.objects.create_user(username=username, password=password, email=email)
+
+    # Crear perfil paciente
+    Paciente.objects.create(usuario=user)
 
     # 🔁 Generar URL completa a la vista de login
     login_url = request.build_absolute_uri(reverse('api_login'))
@@ -103,3 +107,41 @@ def eliminar_especialidad(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
     except Especialidad.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def reservar_cita(request):
+    user = request.user
+    # asegurar que es paciente
+    try:
+        paciente = user.paciente
+    except Paciente.DoesNotExist:
+        return Response({'error': 'Solo los pacientes pueden reservar citas.'}, status=status.HTTP_403_FORBIDDEN)
+
+    medico_id = request.data.get('medico')
+    fecha = request.data.get('fecha')
+    hora = request.data.get('hora')
+
+    if not (medico_id and fecha and hora):
+        return Response({'error': 'Campos incompletos.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        medico = Medico.objects.get(pk=medico_id)
+    except Medico.DoesNotExist:
+        return Response({'error': 'Médico no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+    cita = Cita.objects.create(
+        paciente=paciente,
+        medico=medico,
+        fecha=fecha,
+        hora=hora,
+    )
+
+    return Response({
+        'message': 'Cita reservada.',
+        'cita_id': cita.id,
+        'fecha': cita.fecha,
+        'hora': cita.hora,
+        'medico': medico.nombres,
+        'especialidad': medico.especialidad.nombre,
+    }, status=status.HTTP_201_CREATED)

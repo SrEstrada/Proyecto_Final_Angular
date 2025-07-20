@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Especialidad(models.Model):
     nombre = models.CharField(max_length=100)
@@ -13,3 +14,19 @@ class Medico(models.Model):
 
     def __str__(self):
         return f"{self.nombres} - {self.especialidad.nombre}"
+
+class Paciente(models.Model):
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE)
+    telefono = models.CharField(max_length=15, blank=True, null=True)
+    def __str__(self):
+        return self.usuario.username
+
+class Cita(models.Model):
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
+    medico = models.ForeignKey(Medico, on_delete=models.CASCADE)
+    fecha = models.DateField()
+    hora = models.TimeField()
+    estado = models.CharField(max_length=20, default='Pendiente')
+
+    def __str__(self):
+        return f"Cita {self.paciente} / {self.medico} / {self.fecha} {self.hora}"
