@@ -14,7 +14,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .models import Paciente, Medico, Cita
+from .models import Paciente, Medico, Cita , Horario
 
 # Create your views here.
 def angular_app(request):
@@ -108,40 +108,86 @@ def eliminar_especialidad(request, pk):
     except Especialidad.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
 
+@api_view(['GET'])
+def medicos_por_especialidad(request):
+    especialidad_id = request.GET.get('especialidad')
+    medicos = Medico.objects.filter(especialidad_id=especialidad_id)
+    data = [{"id": m.id, "nombres": m.nombres, "correo": m.correo} for m in medicos]
+    return Response(data)
+
+@api_view(['GET'])
+def horarios_por_medico(request):
+    medico_id = request.GET.get('medico')
+    if not medico_id:
+        return Response([], status=200)
+
+    horarios = Horario.objects.filter(medico_id=medico_id, disponible=True).order_by('fecha', 'hora')
+    data = [
+        {
+            "id": h.id,
+            "fecha": h.fecha.isoformat(),  # YYYY-MM-DD
+            "hora": h.hora.strftime('%H:%M')  # formato corto
+        }
+        for h in horarios
+    ]
+    return Response(data)
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def reservar_cita(request):
     user = request.user
-    # asegurar que es paciente
+
+    # Asegurarnos de que el usuario tenga perfil Paciente
     try:
-        paciente = user.paciente
+        paciente = Paciente.objects.get(usuario=user)
     except Paciente.DoesNotExist:
-        return Response({'error': 'Solo los pacientes pueden reservar citas.'}, status=status.HTTP_403_FORBIDDEN)
+        return Response({'error': 'Solo los pacientes pueden reservar citas.'},
+                        status=status.HTTP_403_FORBIDDEN)
 
     medico_id = request.data.get('medico')
     fecha = request.data.get('fecha')
     hora = request.data.get('hora')
 
     if not (medico_id and fecha and hora):
-        return Response({'error': 'Campos incompletos.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'Campos incompletos.'},
+                        status=status.HTTP_400_BAD_REQUEST)
 
     try:
         medico = Medico.objects.get(pk=medico_id)
     except Medico.DoesNotExist:
-        return Response({'error': 'Médico no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'Médico no encontrado.'},
+                        status=status.HTTP_404_NOT_FOUND)
 
+    # ¿Existe un horario marcado como disponible?
+    horario = Horario.objects.filter(
+        medico=medico,
+        fecha=fecha,
+        hora=hora,
+        disponible=True
+    ).first()
+
+    if not horario:
+        return Response({'error': 'Horario no disponible.'},
+                        status=status.HTTP_400_BAD_REQUEST)
+
+    # Crear cita
     cita = Cita.objects.create(
         paciente=paciente,
         medico=medico,
         fecha=fecha,
         hora=hora,
+        estado='Pendiente'
     )
 
+    # Marcar horario como ya usado
+    horario.disponible = False
+    horario.save()
+
     return Response({
-        'message': 'Cita reservada.',
+        'message': 'Cita reservada con éxito.',
         'cita_id': cita.id,
-        'fecha': cita.fecha,
-        'hora': cita.hora,
+        'fecha': fecha,
+        'hora': hora,
         'medico': medico.nombres,
         'especialidad': medico.especialidad.nombre,
     }, status=status.HTTP_201_CREATED)

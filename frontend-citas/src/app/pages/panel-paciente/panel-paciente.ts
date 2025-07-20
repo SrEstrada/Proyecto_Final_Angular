@@ -14,12 +14,12 @@ export class PanelPaciente implements OnInit {
 
   especialidades: any[] = [];
   medicos: any[] = [];
+  horarios: any[] = [];
 
   // Campos de formulario
   especialidadSeleccionada = '';
   medicoSeleccionado = '';
-  fecha = '';
-  hora = '';
+  horarioSeleccionado = '';
 
   mensaje = '';
   exito = false;
@@ -41,6 +41,7 @@ export class PanelPaciente implements OnInit {
     const espId = (event.target as HTMLSelectElement).value;
     this.especialidadSeleccionada = espId;
     this.medicoSeleccionado = '';
+    this.horarios = [];
     this.medicos = [];
 
     if (!espId) return;
@@ -51,20 +52,37 @@ export class PanelPaciente implements OnInit {
     });
   }
 
+  onMedicoChange(event: Event) {
+    const medicoId = (event.target as HTMLSelectElement).value;
+    this.medicoSeleccionado = medicoId;
+    this.horarioSeleccionado = '';
+    this.horarios = [];
+
+    if (!medicoId) return;
+
+    this.http.get(`/api/horarios/?medico=${medicoId}`).subscribe({
+      next: (data: any) => this.horarios = data,
+      error: err => console.error('Error cargando horarios:', err)
+    });
+  }
+
   reservarCita() {
-    if (!this.medicoSeleccionado || !this.fecha || !this.hora) {
-      this.mensaje = 'Complete todos los campos.';
+    if (!this.medicoSeleccionado || !this.horarioSeleccionado) {
+      this.mensaje = 'Debe seleccionar médico y horario.';
       this.exito = false;
       return;
     }
 
+    const [fecha, hora] = this.horarioSeleccionado.split(' ');
+
     const body = {
       medico: this.medicoSeleccionado,
-      fecha: this.fecha,
-      hora: this.hora,
+      fecha: fecha,
+      hora: hora,
     };
 
     const token = localStorage.getItem('token') || '';
+    console.log('Token enviado:', token);
 
     this.http.post('/api/citas/reservar/', body, {
       headers: { Authorization: `Bearer ${token}` }

@@ -8,7 +8,8 @@ from .views import (
     crear_especialidad,
     editar_especialidad,
     eliminar_especialidad,
-    medicos_por_especialidad
+    medicos_por_especialidad,
+    horarios_por_medico
 )
 
 urlpatterns = [
@@ -17,7 +18,8 @@ urlpatterns = [
     path('especialidades/<int:pk>/editar/', editar_especialidad),  # PUT/PATCH
     path('especialidades/<int:pk>/eliminar/', eliminar_especialidad),  # DELETE
     path('medicos/', medicos_por_especialidad),
+    path('horarios/', horarios_por_medico),
     path('register/', register_user, name='api_register'),
     path('login/', TokenObtainPairView.as_view(), name='api_login'),
-    path('citas/reservar/', reservar_cita, name='api_reservar_cita'),
+    path('citas/reservar/', reservar_cita),
 ]
