@@ -191,3 +191,71 @@ def reservar_cita(request):
         'medico': medico.nombres,
         'especialidad': medico.especialidad.nombre,
     }, status=status.HTTP_201_CREATED)
+
+@api_view(['GET', 'PATCH'])
+@permission_classes([IsAuthenticated])
+def perfil_paciente(request):
+    """Devuelve (GET) o actualiza (PATCH) el perfil del paciente logueado."""
+    try:
+        paciente = Paciente.objects.select_related('usuario').get(usuario=request.user)
+    except Paciente.DoesNotExist:
+        return Response({'error': 'No es paciente.'}, status=status.HTTP_403_FORBIDDEN)
+
+    if request.method == 'GET':
+        data = {
+            'username': paciente.usuario.username,
+            'email': paciente.usuario.email,
+            'first_name': paciente.usuario.first_name,
+            'last_name': paciente.usuario.last_name,
+            'telefono': paciente.telefono,
+        }
+        return Response(data)
+
+    # PATCH (actualizar campos opcionales)
+    telefono = request.data.get('telefono')
+    email = request.data.get('email')
+    first = request.data.get('first_name')
+    last = request.data.get('last_name')
+
+    if telefono is not None:
+        paciente.telefono = telefono
+    if email is not None:
+        paciente.usuario.email = email
+    if first is not None:
+        paciente.usuario.first_name = first
+    if last is not None:
+        paciente.usuario.last_name = last
+
+    paciente.usuario.save()
+    paciente.save()
+
+    return Response({'message': 'Perfil actualizado.'})
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def citas_paciente(request):
+    """Devuelve todas las citas del paciente logueado (orden desc por fecha/hora)."""
+    try:
+        paciente = Paciente.objects.get(usuario=request.user)
+    except Paciente.DoesNotExist:
+        return Response({'error': 'No es paciente.'}, status=status.HTTP_403_FORBIDDEN)
+
+    qs = (
+        Cita.objects
+        .filter(paciente=paciente)
+        .select_related('medico', 'medico__especialidad')
+        .order_by('-fecha', '-hora')
+    )
+
+    data = [
+        {
+            'id': c.id,
+            'fecha': c.fecha.isoformat(),
+            'hora': c.hora.strftime('%H:%M'),
+            'estado': c.estado,
+            'medico': c.medico.nombres,
+            'especialidad': c.medico.especialidad.nombre,
+        }
+        for c in qs
+    ]
+    return Response(data)

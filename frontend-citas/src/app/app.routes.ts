@@ -13,5 +13,6 @@ export const routes: Routes = [
     { path: 'especialidades', component: Especialidades },
     // ✅ Agregar rutas para paneles
     { path: 'panel-paciente', loadComponent: () => import('./pages/panel-paciente/panel-paciente').then(m => m.PanelPaciente) },
+    { path: 'perfil', loadComponent: () => import('./pages/perfil-paciente/perfil-paciente').then(m => m.PerfilPaciente) },
 
 ];

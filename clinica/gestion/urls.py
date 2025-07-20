@@ -2,6 +2,7 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .views import register_user
 from .views import reservar_cita
+from .views import perfil_paciente, citas_paciente
 
 from .views import (
     listar_especialidades,
@@ -22,4 +23,6 @@ urlpatterns = [
     path('register/', register_user, name='api_register'),
     path('login/', TokenObtainPairView.as_view(), name='api_login'),
     path('citas/reservar/', reservar_cita),
+    path('paciente/perfil/', perfil_paciente, name='api_perfil_paciente'),
+    path('paciente/citas/', citas_paciente, name='api_citas_paciente'),
 ]
