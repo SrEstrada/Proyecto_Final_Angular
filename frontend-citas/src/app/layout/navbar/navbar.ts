@@ -16,6 +16,9 @@ export class Navbar {
   get nombreUsuario(): string {
     return localStorage.getItem('username') || '';
   }
+  get rol(): string {
+    return localStorage.getItem('rol') || '';
+  }
   cerrarSesion() {
     localStorage.removeItem('token');
     localStorage.removeItem('username');

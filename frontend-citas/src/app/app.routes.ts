@@ -14,5 +14,5 @@ export const routes: Routes = [
     // ✅ Agregar rutas para paneles
     { path: 'panel-paciente', loadComponent: () => import('./pages/panel-paciente/panel-paciente').then(m => m.PanelPaciente) },
     { path: 'perfil', loadComponent: () => import('./pages/perfil-paciente/perfil-paciente').then(m => m.PerfilPaciente) },
-
+    { path: 'panel-admin', loadComponent: () => import('./pages/panel-admin/panel-admin').then(m => m.PanelAdmin) },
 ];

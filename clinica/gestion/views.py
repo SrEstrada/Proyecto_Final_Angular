@@ -15,6 +15,8 @@ from rest_framework.decorators import permission_classes
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from .models import Paciente, Medico, Cita , Horario
+from .serializers import PacienteAdminSerializer
+from django.db.models import Q
 
 # Create your views here.
 def angular_app(request):
@@ -238,3 +240,65 @@ def citas_paciente(request):
         for c in qs
     ]
     return Response(data)
+
+def es_admin(user):
+    return user.is_staff or hasattr(user, 'administrador')
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def admin_pacientes_list_create(request):
+    user = request.user
+    if not es_admin(user):
+        return Response({'error': 'No autorizado.'}, status=status.HTTP_403_FORBIDDEN)
+
+    # LISTAR / BUSCAR
+    if request.method == 'GET':
+        q = request.GET.get('q', '').strip()
+        pacientes = Paciente.objects.select_related('usuario').all()
+        if q:
+            pacientes = pacientes.filter(
+                Q(usuario__username__icontains=q) |
+                Q(usuario__first_name__icontains=q) |
+                Q(usuario__last_name__icontains=q) |
+                Q(telefono__icontains=q)
+            )
+        serializer = PacienteAdminSerializer(pacientes, many=True)
+        return Response(serializer.data)
+
+    # CREAR
+    if request.method == 'POST':
+        password = request.data.get('password')  # opcional
+        serializer = PacienteAdminSerializer(data=request.data, context={'password': password})
+        if serializer.is_valid():
+            paciente = serializer.save()
+            return Response(PacienteAdminSerializer(paciente).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['GET', 'PATCH', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def admin_paciente_detail(request, pk):
+    user = request.user
+    if not es_admin(user):
+        return Response({'error': 'No autorizado.'}, status=status.HTTP_403_FORBIDDEN)
+
+    try:
+        paciente = Paciente.objects.select_related('usuario').get(pk=pk)
+    except Paciente.DoesNotExist:
+        return Response({'error': 'Paciente no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = PacienteAdminSerializer(paciente)
+        return Response(serializer.data)
+
+    if request.method == 'PATCH':
+        serializer = PacienteAdminSerializer(paciente, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(PacienteAdminSerializer(paciente).data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # DELETE
+    if request.method == 'DELETE':
+        # eliminar también el User
+        paciente.usuario.delete()  # cascada borra paciente
+        return Response(status=status.HTTP_204_NO_CONTENT)
