@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { AdminMedicosService, MedicoAdmin } from '../../services/admin-medicos.service';
 import { EspecialidadService, Especialidad } from '../../services/especialidad.service';
+import { AdminHorariosService, HorarioAdmin } from '../../services/admin-horarios.service';
 
 @Component({
   selector: 'app-panel-admin-medicos',
@@ -14,21 +15,30 @@ import { EspecialidadService, Especialidad } from '../../services/especialidad.s
 })
 export class PanelAdminMedicos implements OnInit {
 
+  // ------------------ Médicos ------------------
   medicos: MedicoAdmin[] = [];
   especialidades: Especialidad[] = [];
-
   cargando = true;
   mensaje = '';
   busqueda = '';
 
-  mostrandoFormulario = false;
+  // Vistas: lista | formMedico | horarios
+  vista: 'lista' | 'formMedico' | 'horarios' = 'lista';
   modo: 'crear' | 'editar' = 'crear';
 
-  formMedico: any = this.formPorDefecto();
+  formMedico: any = this.formMedicoPorDefecto();
+
+  // ------------------ Horarios ------------------
+  medicoActual: MedicoAdmin | null = null;
+  horarios: HorarioAdmin[] = [];
+  cargandoHorarios = false;
+  modoHorario: 'crear' | 'editar' = 'crear';
+  formHorario: any = this.formHorarioPorDefecto();
 
   constructor(
     private svc: AdminMedicosService,
-    private espSvc: EspecialidadService
+    private espSvc: EspecialidadService,
+    private horSvc: AdminHorariosService
   ) {}
 
   ngOnInit(): void {
@@ -36,7 +46,8 @@ export class PanelAdminMedicos implements OnInit {
     this.cargarMedicos();
   }
 
-  private formPorDefecto() {
+  // ======= Médicos =======
+  private formMedicoPorDefecto() {
     return {
       id: null,
       nombres: '',
@@ -78,19 +89,19 @@ export class PanelAdminMedicos implements OnInit {
 
   nuevoMedico() {
     this.modo = 'crear';
-    this.formMedico = this.formPorDefecto();
-    this.mostrandoFormulario = true;
+    this.formMedico = this.formMedicoPorDefecto();
+    this.vista = 'formMedico';
   }
 
   editarMedico(m: MedicoAdmin) {
     this.modo = 'editar';
     this.formMedico = { ...m };
-    this.mostrandoFormulario = true;
+    this.vista = 'formMedico';
   }
 
-  cancelarFormulario() {
-    this.mostrandoFormulario = false;
-    this.formMedico = this.formPorDefecto();
+  cancelarMedico() {
+    this.vista = 'lista';
+    this.formMedico = this.formMedicoPorDefecto();
     this.modo = 'crear';
   }
 
@@ -99,7 +110,7 @@ export class PanelAdminMedicos implements OnInit {
       this.svc.crear(this.formMedico).subscribe({
         next: () => {
           this.mensaje = 'Médico creado.';
-          this.cancelarFormulario();
+          this.cancelarMedico();
           this.cargarMedicos();
         },
         error: err => {
@@ -111,7 +122,7 @@ export class PanelAdminMedicos implements OnInit {
       this.svc.actualizar(this.formMedico.id, this.formMedico).subscribe({
         next: () => {
           this.mensaje = 'Médico actualizado.';
-          this.cancelarFormulario();
+          this.cancelarMedico();
           this.cargarMedicos();
         },
         error: err => {
@@ -134,5 +145,117 @@ export class PanelAdminMedicos implements OnInit {
         this.mensaje = 'Error eliminando médico.';
       }
     });
+  }
+
+  // ======= Horarios =======
+  private formHorarioPorDefecto() {
+    return {
+      id: null,
+      fecha: '',
+      hora: '',
+      disponible: true
+    };
+  }
+
+  verHorarios(m: MedicoAdmin) {
+    this.medicoActual = m;
+    this.vista = 'horarios';
+    this.cargarHorarios();
+  }
+
+  cargarHorarios() {
+    if (!this.medicoActual) return;
+    this.cargandoHorarios = true;
+    this.horSvc.listar(this.medicoActual.id).subscribe({
+      next: data => {
+        this.horarios = data;
+        this.cargandoHorarios = false;
+      },
+      error: err => {
+        console.error('Error cargando horarios:', err);
+        this.mensaje = 'Error cargando horarios.';
+        this.cargandoHorarios = false;
+      }
+    });
+  }
+
+  nuevoHorario() {
+    this.modoHorario = 'crear';
+    this.formHorario = this.formHorarioPorDefecto();
+  }
+
+  editarHorario(h: HorarioAdmin) {
+    this.modoHorario = 'editar';
+    // Normalizamos hora HH:MM
+    const hora = h.hora.slice(0,5);
+    this.formHorario = {
+      id: h.id,
+      fecha: h.fecha,
+      hora,
+      disponible: h.disponible
+    };
+  }
+
+  cancelarHorario() {
+    this.modoHorario = 'crear';
+    this.formHorario = this.formHorarioPorDefecto();
+  }
+
+  guardarHorario() {
+    if (!this.medicoActual) return;
+
+    if (this.modoHorario === 'crear') {
+      this.horSvc.crear(this.medicoActual.id, {
+        fecha: this.formHorario.fecha,
+        hora: this.formHorario.hora,
+        disponible: this.formHorario.disponible
+      }).subscribe({
+        next: () => {
+          this.mensaje = 'Horario creado.';
+          this.cancelarHorario();
+          this.cargarHorarios();
+        },
+        error: err => {
+          console.error('Error creando horario:', err);
+          this.mensaje = 'Error creando horario.';
+        }
+      });
+    } else {
+      this.horSvc.actualizar(this.formHorario.id, {
+        fecha: this.formHorario.fecha,
+        hora: this.formHorario.hora,
+        disponible: this.formHorario.disponible
+      }).subscribe({
+        next: () => {
+          this.mensaje = 'Horario actualizado.';
+          this.cancelarHorario();
+          this.cargarHorarios();
+        },
+        error: err => {
+          console.error('Error actualizando horario:', err);
+          this.mensaje = 'Error actualizando horario.';
+        }
+      });
+    }
+  }
+
+  eliminarHorario(h: HorarioAdmin) {
+    if (!confirm(`¿Eliminar el horario ${h.fecha} ${h.hora}?`)) return;
+    this.horSvc.eliminar(h.id).subscribe({
+      next: () => {
+        this.mensaje = 'Horario eliminado.';
+        this.cargarHorarios();
+      },
+      error: err => {
+        console.error('Error eliminando horario:', err);
+        this.mensaje = 'Error eliminando horario.';
+      }
+    });
+  }
+
+  volverAListaMedicos() {
+    this.vista = 'lista';
+    this.medicoActual = null;
+    this.cancelarHorario();
   }
 }
