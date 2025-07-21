@@ -23,15 +23,23 @@
         <li class="nav-item">
           <a class="nav-link" routerLink="/especialidades" routerLinkActive="active">Especialidades</a>
         </li>
+
+        <!-- Opciones para Pacientes -->
         <li class="nav-item" *ngIf="usuarioLogueado && rol === 'Paciente'">
           <a class="nav-link" routerLink="/panel-paciente" routerLinkActive="active">Reservar Cita</a>
         </li>
         <li class="nav-item" *ngIf="usuarioLogueado && rol === 'Paciente'">
           <a class="nav-link" routerLink="/perfil" routerLinkActive="active">Mi Perfil</a>
         </li>
-        <!-- NUEVO: Enlace para administradores -->
+
+        <!-- Opción para Administradores: Pacientes -->
         <li class="nav-item" *ngIf="usuarioLogueado && rol === 'Administrador'">
-          <a class="nav-link" routerLink="/panel-admin" routerLinkActive="active">Administrar</a>
+          <a class="nav-link" routerLink="/panel-admin" routerLinkActive="active">Pacientes</a>
+        </li>
+
+        <!-- Opción para Administradores: Médicos -->
+        <li class="nav-item" *ngIf="usuarioLogueado && rol === 'Administrador'">
+          <a class="nav-link" routerLink="/panel-admin-medicos" routerLinkActive="active">Médicos</a>
         </li>
       </ul>
 
