@@ -17,17 +17,12 @@ export class PanelAdmin implements OnInit {
   mensaje = '';
   busqueda = '';
 
-  // Formulario de creación/edición
-  modo = 'crear';  // 'crear' | 'editar'
-  formPaciente: any = {
-    id: null,
-    username: '',
-    email: '',
-    first_name: '',
-    last_name: '',
-    telefono: '',
-    password: ''
-  };
+  // Control de vista
+  mostrandoFormulario = false;
+  modo: 'crear' | 'editar' = 'crear';
+
+  // Formulario
+  formPaciente: any = this.formPorDefecto();
 
   constructor(private svc: AdminPacientesService) {}
 
@@ -35,6 +30,19 @@ export class PanelAdmin implements OnInit {
     this.cargarPacientes();
   }
 
+  private formPorDefecto() {
+    return {
+      id: null,
+      username: '',
+      email: '',
+      first_name: '',
+      last_name: '',
+      telefono: '',
+      password: ''
+    };
+  }
+
+  // ----- Listado -----
   cargarPacientes() {
     this.cargando = true;
     this.svc.listar(this.busqueda).subscribe({
@@ -54,22 +62,25 @@ export class PanelAdmin implements OnInit {
     this.cargarPacientes();
   }
 
+  // ----- Formulario: Crear -----
   nuevoPaciente() {
     this.modo = 'crear';
-    this.formPaciente = {
-      id: null,
-      username: '',
-      email: '',
-      first_name: '',
-      last_name: '',
-      telefono: '',
-      password: ''
-    };
+    this.formPaciente = this.formPorDefecto();
+    this.mostrandoFormulario = true;
   }
 
+  // ----- Formulario: Editar -----
   editarPaciente(p: PacienteAdmin) {
     this.modo = 'editar';
+    // Clonar para no tocar la tabla en vivo
     this.formPaciente = { ...p, password: '' };
+    this.mostrandoFormulario = true;
+  }
+
+  cancelarFormulario() {
+    this.mostrandoFormulario = false;
+    this.formPaciente = this.formPorDefecto();
+    this.modo = 'crear';
   }
 
   guardarPaciente() {
@@ -77,7 +88,7 @@ export class PanelAdmin implements OnInit {
       this.svc.crear(this.formPaciente).subscribe({
         next: () => {
           this.mensaje = 'Paciente creado.';
-          this.nuevoPaciente(); // reset
+          this.cancelarFormulario();
           this.cargarPacientes();
         },
         error: err => {
@@ -89,7 +100,7 @@ export class PanelAdmin implements OnInit {
       this.svc.actualizar(this.formPaciente.id, this.formPaciente).subscribe({
         next: () => {
           this.mensaje = 'Paciente actualizado.';
-          this.nuevoPaciente();
+          this.cancelarFormulario();
           this.cargarPacientes();
         },
         error: err => {
