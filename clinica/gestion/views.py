@@ -13,10 +13,12 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import Paciente, Medico, Cita , Horario, Administrador
 from .serializers import PacienteAdminSerializer
 from django.db.models import Q
+from .models import Medico, Especialidad
+from .serializers import MedicoSerializer
 
 # Create your views here.
 def angular_app(request):
@@ -318,3 +320,75 @@ def obtener_rol(request):
 
     # Ninguna coincidencia
     return Response({'rol': 'Desconocido'})
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated, IsAdminUser])
+def admin_medicos(request):
+    """
+    GET: lista con búsqueda por ?q=
+    POST: crear médico {nombres, correo, especialidad}
+    """
+    if request.method == 'GET':
+        q = request.GET.get('q', '').strip()
+        medicos = Medico.objects.all()
+        if q:
+            medicos = medicos.filter(nombres__icontains=q) | medicos.filter(correo__icontains=q)
+        serializer = MedicoSerializer(medicos, many=True)
+        return Response(serializer.data)
+
+    # POST
+    nombres = request.data.get('nombres')
+    correo = request.data.get('correo')
+    especialidad_id = request.data.get('especialidad')
+
+    if not nombres or not correo or not especialidad_id:
+        return Response({'error': 'Todos los campos son obligatorios.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        esp = Especialidad.objects.get(pk=especialidad_id)
+    except Especialidad.DoesNotExist:
+        return Response({'error': 'Especialidad no válida.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    medico = Medico.objects.create(nombres=nombres, correo=correo, especialidad=esp)
+    serializer = MedicoSerializer(medico)
+    return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+@permission_classes([IsAuthenticated, IsAdminUser])
+def admin_medico_detalle(request, pk):
+    """
+    GET: detalle
+    PUT: actualizar
+    DELETE: eliminar
+    """
+    try:
+        medico = Medico.objects.get(pk=pk)
+    except Medico.DoesNotExist:
+        return Response({'error': 'Médico no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = MedicoSerializer(medico)
+        return Response(serializer.data)
+
+    if request.method == 'PUT':
+        nombres = request.data.get('nombres', medico.nombres)
+        correo = request.data.get('correo', medico.correo)
+        especialidad_id = request.data.get('especialidad', medico.especialidad_id)
+
+        try:
+            esp = Especialidad.objects.get(pk=especialidad_id)
+        except Especialidad.DoesNotExist:
+            return Response({'error': 'Especialidad no válida.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        medico.nombres = nombres
+        medico.correo = correo
+        medico.especialidad = esp
+        medico.save()
+
+        serializer = MedicoSerializer(medico)
+        return Response(serializer.data)
+
+    # DELETE
+    medico.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
