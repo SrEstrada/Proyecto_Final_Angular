@@ -4,6 +4,7 @@ from .views import register_user
 from .views import reservar_cita
 from .views import perfil_paciente, citas_paciente
 from .views import admin_pacientes_list_create, admin_paciente_detail
+from .views import obtener_rol
 
 from .views import (
     listar_especialidades,
@@ -28,4 +29,5 @@ urlpatterns = [
     path('paciente/citas/', citas_paciente, name='api_citas_paciente'),
     path('admin/pacientes/', admin_pacientes_list_create, name='api_admin_pacientes'),
     path('admin/pacientes/<int:pk>/', admin_paciente_detail, name='api_admin_paciente_detalle'),
+    path('rol/', obtener_rol, name='api_rol'),
 ]

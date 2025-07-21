@@ -14,7 +14,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.decorators import permission_classes
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from .models import Paciente, Medico, Cita , Horario
+from .models import Paciente, Medico, Cita , Horario, Administrador
 from .serializers import PacienteAdminSerializer
 from django.db.models import Q
 
@@ -302,3 +302,19 @@ def admin_paciente_detail(request, pk):
         # eliminar también el User
         paciente.usuario.delete()  # cascada borra paciente
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def obtener_rol(request):
+    user = request.user
+
+    # ¿Administrador?
+    if user.is_staff or Administrador.objects.filter(usuario=user).exists():
+        return Response({'rol': 'Administrador'})
+
+    # ¿Paciente?
+    if Paciente.objects.filter(usuario=user).exists():
+        return Response({'rol': 'Paciente'})
+
+    # Ninguna coincidencia
+    return Response({'rol': 'Desconocido'})

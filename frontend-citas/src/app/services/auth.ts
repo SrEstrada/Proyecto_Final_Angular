@@ -1,6 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { tap } from 'rxjs/operators';
+import { tap, switchMap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,14 +11,20 @@ export class Auth {
 
   constructor(private http: HttpClient) {}
 
-  login(credentials: { username: string; password: string }) {
+  // --- Auth ---
+  login(credentials: { username: string; password: string }): Observable<any> {
+    // TokenObtainPairView -> access, refresh
     return this.http.post<{ access: string; refresh: string }>(
-      `${this.apiUrl}/token/`, // ← Este es el endpoint de SimpleJWT
+      `${this.apiUrl}/login/`,
       credentials
     ).pipe(
       tap(response => {
         this.guardarToken(response.access, response.refresh, credentials.username);
-      })
+      }),
+      // tras guardar token, pedimos el rol y lo guardamos
+      switchMap(() => this.obtenerRol().pipe(
+        tap(resp => localStorage.setItem('rol', resp.rol)),
+      ))
     );
   }
 
@@ -36,20 +43,30 @@ export class Auth {
   obtenerToken(): string | null {
     return localStorage.getItem('token');
   }
-
+  obtenerRefreshToken(): string | null {
+    return localStorage.getItem('refresh');
+  }
   obtenerNombreUsuario(): string | null {
     return localStorage.getItem('username');
+  }
+  obtenerRol(): Observable<{ rol: string }> {
+    const headers = this.authHeaders();
+    return this.http.get<{ rol: string }>(`${this.apiUrl}/rol/`, { headers });
   }
 
   cerrarSesion() {
     localStorage.removeItem('token');
+    localStorage.removeItem('refresh');
     localStorage.removeItem('username');
+    localStorage.removeItem('rol');
   }
 
   estaAutenticado(): boolean {
     return !!this.obtenerToken();
   }
-  obtenerRefreshToken(): string | null {
-    return localStorage.getItem('refresh');
+
+  private authHeaders(): HttpHeaders {
+    const token = this.obtenerToken() || '';
+    return new HttpHeaders({ Authorization: `Bearer ${token}` });
   }
 }
