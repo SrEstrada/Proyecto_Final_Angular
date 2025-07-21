@@ -44,7 +44,9 @@ class Horario(models.Model):
     
 class Administrador(models.Model):
     usuario = models.OneToOneField(User, on_delete=models.CASCADE)
-    nombre_mostrar = models.CharField(max_length=150, blank=True)
+    telefono = models.CharField(max_length=15, blank=True, null=True)
+    nombres = models.CharField(max_length=100, blank=True) 
+    apellidos = models.CharField(max_length=100, blank=True)
 
     def __str__(self):
-        return self.nombre_mostrar or self.usuario.username
+        return f"{self.nombres} {self.apellidos}"
