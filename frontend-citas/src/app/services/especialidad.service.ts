@@ -9,6 +9,15 @@ export interface Especialidad {
   nombre: string;
 }
 
+export interface EspecialidadConMedicos extends Especialidad {
+  medicos: {
+    id: number;
+    nombres: string;
+    correo: string;
+    especialidad: number;
+  }[];
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -75,5 +84,9 @@ export class EspecialidadService {
       `${this.baseUrl}/especialidades/${id}/eliminar/`,
       { headers: this.authHeaders() }
     );
+  }
+
+  getEspecialidadesConMedicos(): Observable<EspecialidadConMedicos[]> {
+    return this.http.get<EspecialidadConMedicos[]>(`${this.baseUrl}/especialidades-con-medicos/`);
   }
 }

@@ -19,6 +19,7 @@ from .serializers import PacienteAdminSerializer, HorarioSerializer
 from django.db.models import Q
 from .models import Medico, Especialidad
 from .serializers import MedicoSerializer
+from .serializers import EspecialidadConMedicosSerializer
 
 # Create your views here.
 def angular_app(request):
@@ -90,21 +91,21 @@ def crear_especialidad(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
+@api_view(['PUT', 'PATCH'])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def editar_especialidad(request, pk):
     try:
-        especialidad = Especialidad.objects.get(pk=pk)
+        esp = Especialidad.objects.get(pk=pk)
     except Especialidad.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+        return Response({'error': 'No existe.'}, status=status.HTTP_404_NOT_FOUND)
 
-    serializer = EspecialidadSerializer(especialidad, data=request.data, partial=True)
+    serializer = EspecialidadSerializer(esp, data=request.data, partial=True)  # partial soporta PATCH
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['POST'])
+@api_view(['PUT', 'PATCH'])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def eliminar_especialidad(request, pk):
     try:
@@ -113,6 +114,12 @@ def eliminar_especialidad(request, pk):
         return Response(status=status.HTTP_204_NO_CONTENT)
     except Especialidad.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
+
+@api_view(['GET'])
+def especialidades_con_medicos(request):
+    especialidades = Especialidad.objects.all()
+    serializer = EspecialidadConMedicosSerializer(especialidades, many=True)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def medicos_por_especialidad(request):
@@ -136,6 +143,19 @@ def horarios_por_medico(request):
         }
         for h in horarios
     ]
+    return Response(data)
+
+@api_view(['GET'])
+def especialidades_con_medicos(request):
+    especialidades = Especialidad.objects.all()
+    data = []
+    for esp in especialidades:
+        medicos = Medico.objects.filter(especialidad=esp)
+        data.append({
+            "id": esp.id,
+            "nombre": esp.nombre,
+            "medicos": MedicoSerializer(medicos, many=True).data
+        })
     return Response(data)
 
 @api_view(['POST'])

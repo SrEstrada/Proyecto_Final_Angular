@@ -12,29 +12,16 @@ import { EspecialidadService } from '../../services/especialidad.service';
 })
 export class Especialidades implements OnInit {
   especialidades: any[] = [];
-  medicos: any[] = [];
-  especialidadSeleccionada: number = 0;
   nuevaEspecialidad: string = '';
 
   constructor(private servicio: EspecialidadService) {}
 
   ngOnInit(): void {
-    this.servicio.getEspecialidades().subscribe(data => {
-      this.especialidades = data;
-    });
+    this.cargarEspecialidades();
   }
 
-  buscarMedicos(): void {
-    if (this.especialidadSeleccionada) {
-      this.servicio.getMedicosPorEspecialidad(this.especialidadSeleccionada).subscribe(data => {
-        this.medicos = data;
-      });
-    } else {
-      this.medicos = [];
-    }
-  }
-    cargarEspecialidades(): void {
-    this.servicio.getEspecialidades().subscribe(data => {
+  cargarEspecialidades(): void {
+    this.servicio.getEspecialidadesConMedicos().subscribe(data => {
       this.especialidades = data;
     });
   }
@@ -53,6 +40,7 @@ export class Especialidades implements OnInit {
       this.cargarEspecialidades();
     });
   }
+
   confirmarEliminar(id: number): void {
     if (confirm('¿Seguro que quieres eliminar esta especialidad?')) {
       this.eliminarEspecialidad(id);

@@ -3,6 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { EspecialidadService, Especialidad } from '../../services/especialidad.service';
 
+interface EspecialidadConMedicos extends Especialidad {
+  medicos: { id: number; nombres: string; correo: string; especialidad: number }[];
+}
+
 @Component({
   selector: 'app-panel-admin-especialidades',
   standalone: true,
@@ -11,7 +15,7 @@ import { EspecialidadService, Especialidad } from '../../services/especialidad.s
   styleUrls: ['./panel-admin-especialidades.css']
 })
 export class PanelAdminEspecialidades implements OnInit {
-  especialidades: Especialidad[] = [];
+  especialidades: EspecialidadConMedicos[] = [];
   cargando = true;
   mensaje = '';
 
@@ -28,7 +32,7 @@ export class PanelAdminEspecialidades implements OnInit {
 
   cargarEspecialidades() {
     this.cargando = true;
-    this.espSvc.listar().subscribe({
+    this.espSvc.getEspecialidadesConMedicos().subscribe({
       next: data => {
         this.especialidades = data;
         this.cargando = false;

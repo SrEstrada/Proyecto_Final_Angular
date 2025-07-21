@@ -10,10 +10,26 @@ class EspecialidadSerializer(serializers.ModelSerializer):
         model = Especialidad
         fields = '__all__'
 
+class MedicoSimpleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Medico
+        fields = ['id', 'nombres', 'correo', 'especialidad']
+
 class MedicoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Medico
         fields = '__all__'
+
+class EspecialidadConMedicosSerializer(serializers.ModelSerializer):
+    medicos = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Especialidad
+        fields = ['id', 'nombre', 'medicos']
+
+    def get_medicos(self, obj):
+        medicos = Medico.objects.filter(especialidad=obj)
+        return MedicoSimpleSerializer(medicos, many=True).data
 
 class CitaSerializer(serializers.ModelSerializer):
     class Meta:
