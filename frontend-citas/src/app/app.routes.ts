@@ -16,5 +16,10 @@ export const routes: Routes = [
     { path: 'perfil', loadComponent: () => import('./pages/perfil-paciente/perfil-paciente').then(m => m.PerfilPaciente) },
     { path: 'panel-admin', loadComponent: () => import('./pages/panel-admin/panel-admin').then(m => m.PanelAdmin) },
     { path: 'panel-admin-medicos', loadComponent: () => import('./pages/panel-admin-medicos/panel-admin-medicos').then(m => m.PanelAdminMedicos) },
+    { 
+        path: 'panel-admin-especialidades', 
+        loadComponent: () => import('./pages/panel-admin-especialidades/panel-admin-especialidades')
+          .then(m => m.PanelAdminEspecialidades) 
+      },
 
 ];

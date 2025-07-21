@@ -82,7 +82,7 @@ def listar_especialidades(request):
     return Response(serializer.data)
 
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def crear_especialidad(request):
     serializer = EspecialidadSerializer(data=request.data)
     if serializer.is_valid():
@@ -90,7 +90,8 @@ def crear_especialidad(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PUT', 'PATCH'])
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def editar_especialidad(request, pk):
     try:
         especialidad = Especialidad.objects.get(pk=pk)
@@ -103,7 +104,8 @@ def editar_especialidad(request, pk):
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['DELETE'])
+@api_view(['POST'])
+@permission_classes([IsAuthenticated, IsAdminUser])
 def eliminar_especialidad(request, pk):
     try:
         especialidad = Especialidad.objects.get(pk=pk)
