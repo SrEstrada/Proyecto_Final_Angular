@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from .models import Especialidad, Medico
 from .models import Cita
 from .models import Paciente
+from .models import Horario
 
 class EspecialidadSerializer(serializers.ModelSerializer):
     class Meta:
@@ -76,3 +77,8 @@ class PacienteAdminSerializer(serializers.ModelSerializer):
             instance.save()
 
         return instance
+    
+class HorarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Horario
+        fields = '__all__'   # id, medico, fecha, hora, disponible

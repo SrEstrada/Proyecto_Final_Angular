@@ -15,7 +15,7 @@ from rest_framework.decorators import permission_classes
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from .models import Paciente, Medico, Cita , Horario, Administrador
-from .serializers import PacienteAdminSerializer
+from .serializers import PacienteAdminSerializer, HorarioSerializer
 from django.db.models import Q
 from .models import Medico, Especialidad
 from .serializers import MedicoSerializer
@@ -391,4 +391,59 @@ def admin_medico_detalle(request, pk):
 
     # DELETE
     medico.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated, IsAdminUser])
+def admin_medico_horarios(request, medico_id):
+    """
+    GET: Lista horarios de un médico.
+    POST: Crea horario para el médico.
+          body: {fecha: 'YYYY-MM-DD', hora: 'HH:MM', disponible?: bool}
+    """
+    try:
+        medico = Medico.objects.get(pk=medico_id)
+    except Medico.DoesNotExist:
+        return Response({'error': 'Médico no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        qs = Horario.objects.filter(medico=medico).order_by('fecha', 'hora')
+        ser = HorarioSerializer(qs, many=True)
+        return Response(ser.data)
+
+    # POST
+    data = request.data.copy()
+    data['medico'] = medico.id
+    ser = HorarioSerializer(data=data)
+    if ser.is_valid():
+        ser.save()
+        return Response(ser.data, status=status.HTTP_201_CREATED)
+    return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['PUT', 'DELETE'])
+@permission_classes([IsAuthenticated, IsAdminUser])
+def admin_horario_detalle(request, pk):
+    """
+    PUT: Actualiza un horario existente.
+    DELETE: Elimina horario.
+    """
+    try:
+        hor = Horario.objects.get(pk=pk)
+    except Horario.DoesNotExist:
+        return Response({'error': 'Horario no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'PUT':
+        # Permitimos actualización parcial
+        data = request.data.copy()
+        if 'medico' not in data:
+            data['medico'] = hor.medico_id
+        ser = HorarioSerializer(hor, data=data, partial=True)
+        if ser.is_valid():
+            ser.save()
+            return Response(ser.data)
+        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # DELETE
+    hor.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
