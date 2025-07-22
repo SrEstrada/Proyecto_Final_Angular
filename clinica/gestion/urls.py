@@ -6,7 +6,7 @@ from .views import perfil_paciente, citas_paciente
 from .views import admin_pacientes_list_create, admin_paciente_detail
 from .views import obtener_rol
 from .views import admin_medicos, admin_medico_detalle
-from .views import admin_medico_horarios, admin_horario_detalle, especialidades_con_medicos
+from .views import admin_medico_horarios, admin_horario_detalle, especialidades_con_medicos, admin_citas_list_create, admin_cita_detail
 
 from .views import (
     listar_especialidades,
@@ -39,4 +39,7 @@ urlpatterns = [
     # Admin horario individual
     path('admin/horarios/<int:pk>/', admin_horario_detalle, name='admin_horario_detalle'),
     path('especialidades-con-medicos/', especialidades_con_medicos, name='especialidades_con_medicos'),
+    # --- ADMIN CITAS ---
+    path('admin/citas/', admin_citas_list_create, name='admin_citas'),
+    path('admin/citas/<int:pk>/', admin_cita_detail, name='admin_cita_detalle'),
 ]

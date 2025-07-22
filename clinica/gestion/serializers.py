@@ -98,3 +98,31 @@ class HorarioSerializer(serializers.ModelSerializer):
     class Meta:
         model = Horario
         fields = '__all__'   # id, medico, fecha, hora, disponible
+
+class CitaAdminSerializer(serializers.ModelSerializer):
+    # Datos enriquecidos de solo lectura
+    paciente_username = serializers.CharField(source='paciente.usuario.username', read_only=True)
+    paciente_nombre = serializers.SerializerMethodField()
+    medico_nombre = serializers.CharField(source='medico.nombres', read_only=True)
+    especialidad_nombre = serializers.CharField(source='medico.especialidad.nombre', read_only=True)
+
+    class Meta:
+        model = Cita
+        fields = [
+            'id',
+            'paciente',              # FK id (editable)
+            'paciente_username',     # readonly
+            'paciente_nombre',       # readonly
+            'medico',                # FK id (editable)
+            'medico_nombre',         # readonly
+            'especialidad_nombre',   # readonly
+            'fecha',
+            'hora',
+            'estado',
+        ]
+
+    def get_paciente_nombre(self, obj):
+        first = obj.paciente.usuario.first_name or ''
+        last = obj.paciente.usuario.last_name or ''
+        full = f'{first} {last}'.strip()
+        return full or obj.paciente.usuario.username

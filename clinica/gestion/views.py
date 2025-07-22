@@ -20,6 +20,7 @@ from django.db.models import Q
 from .models import Medico, Especialidad
 from .serializers import MedicoSerializer
 from .serializers import EspecialidadConMedicosSerializer
+from .serializers import CitaAdminSerializer
 
 # Create your views here.
 def angular_app(request):
@@ -469,4 +470,73 @@ def admin_horario_detalle(request, pk):
 
     # DELETE
     hor.delete()
+    return Response(status=status.HTTP_204_NO_CONTENT)
+
+# ------------------------------------------------------------------
+# ADMIN - LIST / CREATE Citas
+# ------------------------------------------------------------------
+@api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
+def admin_citas_list_create(request):
+    # Revisa privilegio admin (usa tu modelo Administrador o is_staff)
+    if not request.user.is_staff:
+        return Response({'detail': 'No autorizado.'}, status=status.HTTP_403_FORBIDDEN)
+
+    if request.method == 'GET':
+        qs = Cita.objects.select_related(
+            'paciente__usuario', 'medico__especialidad'
+        ).all()
+
+        q = request.GET.get('q')
+        if q:
+            qs = qs.filter(
+                Q(paciente__usuario__username__icontains=q) |
+                Q(paciente__usuario__first_name__icontains=q) |
+                Q(paciente__usuario__last_name__icontains=q) |
+                Q(medico__nombres__icontains=q) |
+                Q(medico__especialidad__nombre__icontains=q) |
+                Q(estado__icontains=q)
+            )
+
+        ser = CitaAdminSerializer(qs, many=True)
+        return Response(ser.data)
+
+    # POST crear
+    ser = CitaAdminSerializer(data=request.data)
+    if ser.is_valid():
+        ser.save()
+        return Response(ser.data, status=status.HTTP_201_CREATED)
+    return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# ------------------------------------------------------------------
+# ADMIN - DETAIL / UPDATE / DELETE Cita
+# ------------------------------------------------------------------
+@api_view(['GET', 'PUT', 'PATCH', 'DELETE'])
+@permission_classes([IsAuthenticated])
+def admin_cita_detail(request, pk):
+    if not request.user.is_staff:
+        return Response({'detail': 'No autorizado.'}, status=status.HTTP_403_FORBIDDEN)
+
+    try:
+        cita = Cita.objects.select_related(
+            'paciente__usuario', 'medico__especialidad'
+        ).get(pk=pk)
+    except Cita.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        ser = CitaAdminSerializer(cita)
+        return Response(ser.data)
+
+    if request.method in ['PUT', 'PATCH']:
+        partial = request.method == 'PATCH'
+        ser = CitaAdminSerializer(cita, data=request.data, partial=partial)
+        if ser.is_valid():
+            ser.save()
+            return Response(ser.data)
+        return Response(ser.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    # DELETE
+    cita.delete()
     return Response(status=status.HTTP_204_NO_CONTENT)
