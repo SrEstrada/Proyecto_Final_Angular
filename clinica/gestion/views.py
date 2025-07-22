@@ -59,6 +59,7 @@ def register_user(request):
         return Response({'error': f'Usuario creado, pero hubo un error al enviar el correo: {str(e)}'}, status=201)
 
     return Response({'message': 'Usuario creado correctamente'}, status=status.HTTP_201_CREATED)
+# --- LISTA PÚBLICA ---
 @api_view(['GET'])
 def listar_especialidades(request):
     especialidades = Especialidad.objects.all()
@@ -105,7 +106,7 @@ def editar_especialidad(request, pk):
         return Response(serializer.data)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['PUT', 'PATCH'])
+@api_view(['DELETE'])
 @permission_classes([IsAuthenticated, IsAdminUser])
 def eliminar_especialidad(request, pk):
     try:
