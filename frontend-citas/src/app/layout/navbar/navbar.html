@@ -15,15 +15,39 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarNav">
+      <!-- Menú principal -->
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
           <a class="nav-link" routerLink="/" routerLinkActive="active">Inicio</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/especialidades" routerLinkActive="active">Especialidades</a>
+        <li class="nav-item" *ngIf="usuarioLogueado && rol === 'Administrador'">
+          <a class="nav-link" routerLink="/panel-admin-especialidades" routerLinkActive="active">Especialidades</a>
+        </li>
+
+        <!-- Opciones para Pacientes -->
+        <li class="nav-item" *ngIf="usuarioLogueado && rol === 'Paciente'">
+          <a class="nav-link" routerLink="/panel-paciente" routerLinkActive="active">Reservar Cita</a>
+        </li>
+        <li class="nav-item" *ngIf="usuarioLogueado && rol === 'Paciente'">
+          <a class="nav-link" routerLink="/perfil" routerLinkActive="active">Mi Perfil</a>
+        </li>
+
+        <!-- Opción para Administradores: Pacientes -->
+        <li class="nav-item" *ngIf="usuarioLogueado && rol === 'Administrador'">
+          <a class="nav-link" routerLink="/panel-admin" routerLinkActive="active">Pacientes</a>
+        </li>
+
+        <!-- Opción para Administradores: Médicos -->
+        <li class="nav-item" *ngIf="usuarioLogueado && rol === 'Administrador'">
+          <a class="nav-link" routerLink="/panel-admin-medicos" routerLinkActive="active">Médicos</a>
+        </li>
+
+        <li class="nav-item" *ngIf="usuarioLogueado && rol === 'Administrador'">
+          <a class="nav-link" routerLink="/panel-admin-citas" routerLinkActive="active">Citas</a>
         </li>
       </ul>
 
+      <!-- Autenticación -->
       <ul class="navbar-nav ms-auto">
         <li class="nav-item" *ngIf="!usuarioLogueado">
           <a class="nav-link" routerLink="/login">Login</a>

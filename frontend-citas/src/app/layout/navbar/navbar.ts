@@ -1,25 +1,35 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './navbar.html',
-  styleUrl: './navbar.css'
+  styleUrls: ['./navbar.css']
 })
 export class Navbar {
+
+  constructor(private router: Router) {}
+
   get usuarioLogueado(): boolean {
     return localStorage.getItem('token') !== null;
   }
+
   get nombreUsuario(): string {
     return localStorage.getItem('username') || '';
   }
-  cerrarSesion() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('username');
-    location.reload();
+
+  get rol(): string {
+    return localStorage.getItem('rol') || '';
   }
 
+  cerrarSesion() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('refresh');
+    localStorage.removeItem('username');
+    localStorage.removeItem('rol');
+    this.router.navigate(['/login']);
+  }
 }
