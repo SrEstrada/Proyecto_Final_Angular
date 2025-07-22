@@ -20,6 +20,10 @@ export const routes: Routes = [
         path: 'panel-admin-especialidades', 
         loadComponent: () => import('./pages/panel-admin-especialidades/panel-admin-especialidades')
           .then(m => m.PanelAdminEspecialidades) 
-      },
+    },
+    { path: 'panel-admin-citas',
+        loadComponent: () => import('./pages/panel-admin-citas/panel-admin-citas')
+          .then(m => m.PanelAdminCitas)
+    },
 
 ];

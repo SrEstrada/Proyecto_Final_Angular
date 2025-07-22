@@ -41,6 +41,10 @@
         <li class="nav-item" *ngIf="usuarioLogueado && rol === 'Administrador'">
           <a class="nav-link" routerLink="/panel-admin-medicos" routerLinkActive="active">Médicos</a>
         </li>
+
+        <li class="nav-item" *ngIf="usuarioLogueado && rol === 'Administrador'">
+          <a class="nav-link" routerLink="/panel-admin-citas" routerLinkActive="active">Citas</a>
+        </li>
       </ul>
 
       <!-- Autenticación -->
