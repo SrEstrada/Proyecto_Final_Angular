@@ -32,10 +32,12 @@ class EspecialidadConMedicosSerializer(serializers.ModelSerializer):
         return MedicoSimpleSerializer(medicos, many=True).data
 
 class CitaSerializer(serializers.ModelSerializer):
+    medico = serializers.CharField(source='medico.nombres', read_only=True)
+    especialidad = serializers.CharField(source='medico.especialidad.nombre', read_only=True)
+
     class Meta:
         model = Cita
-        fields = '__all__'
-        read_only_fields = ['paciente']  # Se asignará automáticamente
+        fields = ['id', 'fecha', 'hora', 'estado', 'medico', 'especialidad']
 
 class PacienteAdminSerializer(serializers.ModelSerializer):
     # Campos del User relacionado

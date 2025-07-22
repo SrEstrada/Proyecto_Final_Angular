@@ -21,6 +21,7 @@ from .models import Medico, Especialidad
 from .serializers import MedicoSerializer
 from .serializers import EspecialidadConMedicosSerializer
 from .serializers import CitaAdminSerializer
+from .serializers import CitaSerializer
 
 # Create your views here.
 def angular_app(request):
@@ -241,31 +242,10 @@ def perfil_paciente(request):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def citas_paciente(request):
-    """Devuelve todas las citas del paciente logueado (orden desc por fecha/hora)."""
-    try:
-        paciente = Paciente.objects.get(usuario=request.user)
-    except Paciente.DoesNotExist:
-        return Response({'error': 'No es paciente.'}, status=status.HTTP_403_FORBIDDEN)
-
-    qs = (
-        Cita.objects
-        .filter(paciente=paciente)
-        .select_related('medico', 'medico__especialidad')
-        .order_by('-fecha', '-hora')
-    )
-
-    data = [
-        {
-            'id': c.id,
-            'fecha': c.fecha.isoformat(),
-            'hora': c.hora.strftime('%H:%M'),
-            'estado': c.estado,
-            'medico': c.medico.nombres,
-            'especialidad': c.medico.especialidad.nombre,
-        }
-        for c in qs
-    ]
-    return Response(data)
+    paciente = Paciente.objects.get(usuario=request.user)
+    citas = Cita.objects.filter(paciente=paciente).order_by('-fecha', '-hora')
+    serializer = CitaSerializer(citas, many=True)
+    return Response(serializer.data)
 
 def es_admin(user):
     return user.is_staff or hasattr(user, 'administrador')
