@@ -1,110 +1,115 @@
-<div class="container mt-4">
-    <h2 class="text-danger mb-4">Panel de Administrador</h2>
-  
-    <!-- Mensaje -->
-    <div *ngIf="mensaje" class="alert alert-info">{{ mensaje }}</div>
-  
-    <!-- ============================= -->
-    <!-- LISTADO DE PACIENTES          -->
-    <!-- ============================= -->
-    <ng-container *ngIf="!mostrandoFormulario">
-      <!-- Buscador + botón añadir -->
-      <div class="row mb-3 g-2 align-items-center">
-        <div class="col-sm">
-          <div class="input-group">
-            <input
-              type="text"
-              class="form-control"
-              placeholder="Buscar paciente..."
-              [(ngModel)]="busqueda"
-              (keyup.enter)="buscar()"
-            >
-            <button class="btn btn-outline-secondary" type="button" (click)="buscar()">Buscar</button>
+<div class="container mt-4 admin-pacientes-page">
+  <header class="page-header">
+    <i class="bi bi-people-fill page-icon"></i>
+    <h2>Administrar Pacientes</h2>
+  </header>
+
+  <div *ngIf="mensaje" class="alert alert-info">{{ mensaje }}</div>
+
+  <!-- VISTA DE LISTA DE PACIENTES -->
+  <ng-container *ngIf="!mostrandoFormulario">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <div class="toolbar">
+          <div class="input-group search-bar">
+            <input type="text" class="form-control" placeholder="Buscar por usuario, nombre, correo..." [(ngModel)]="busqueda" (keyup.enter)="buscar()">
+            <button class="btn btn-outline-secondary" type="button" (click)="buscar()">
+              <i class="bi bi-search"></i>
+            </button>
           </div>
+          <button class="btn btn-primary" (click)="nuevoPaciente()">
+            <i class="bi bi-plus-lg me-2"></i>Añadir Paciente
+          </button>
         </div>
-        <div class="col-auto">
-          <button class="btn btn-success" type="button" (click)="nuevoPaciente()">Añadir Paciente</button>
+
+        <div *ngIf="cargando" class="loading-state">
+            <div class="spinner-border text-primary" role="status"></div>
+            <p class="mt-2">Cargando pacientes...</p>
+        </div>
+
+        <div *ngIf="!cargando && pacientes.length === 0" class="empty-state">
+            <i class="bi bi-emoji-frown empty-icon"></i>
+            <h4>No se encontraron pacientes</h4>
+            <p>Prueba con otro término de búsqueda o añade un nuevo paciente.</p>
+        </div>
+
+        <div class="table-responsive" *ngIf="!cargando && pacientes.length > 0">
+          <table class="table custom-table align-middle">
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Nombre Completo</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th class="text-end">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of pacientes">
+                <td>{{ p.username }}</td>
+                <td>{{ p.first_name }} {{ p.last_name }}</td>
+                <td>{{ p.email }}</td>
+                <td>{{ p.telefono || 'No especificado' }}</td>
+                <td class="text-end">
+                  <button class="btn btn-sm btn-outline-primary me-2" (click)="editarPaciente(p)" title="Editar Paciente">
+                    <i class="bi bi-pencil-fill me-1"></i> Editar
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="eliminarPaciente(p)" title="Eliminar Paciente">
+                    <i class="bi bi-trash-fill me-1"></i> Eliminar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-  
-      <!-- Tabla de pacientes -->
-      <div *ngIf="cargando">Cargando pacientes...</div>
-      <div *ngIf="!cargando && pacientes.length === 0" class="alert alert-warning">
-        No se encontraron pacientes.
+    </div>
+  </ng-container>
+
+  <!-- VISTA DE FORMULARIO -->
+  <ng-container *ngIf="mostrandoFormulario">
+    <div class="card shadow-sm">
+      <div class="card-header">
+        <h4 class="mb-0">{{ modo === 'crear' ? 'Añadir Nuevo Paciente' : 'Editar Paciente' }}</h4>
       </div>
-      <div class="table-responsive" *ngIf="!cargando && pacientes.length > 0">
-        <table class="table table-striped align-middle">
-          <thead>
-            <tr>
-              <th>Usuario</th>
-              <th>Nombre</th>
-              <th>Correo</th>
-              <th>Teléfono</th>
-              <th style="width: 130px;">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let p of pacientes">
-              <td>{{ p.username }}</td>
-              <td>{{ p.first_name }} {{ p.last_name }}</td>
-              <td>{{ p.email }}</td>
-              <td>{{ p.telefono }}</td>
-              <td>
-                <button class="btn btn-sm btn-primary me-1" (click)="editarPaciente(p)">Editar</button>
-                <button class="btn btn-sm btn-danger" (click)="eliminarPaciente(p)">Eliminar</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="card-body">
+        <form (ngSubmit)="guardarPaciente()" #pacForm="ngForm">
+          <div class="mb-3">
+            <label class="form-label">Usuario</label>
+            <input class="form-control" [(ngModel)]="formPaciente.username" name="username" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Correo</label>
+            <input class="form-control" [(ngModel)]="formPaciente.email" name="email" type="email">
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Nombres</label>
+              <input class="form-control" [(ngModel)]="formPaciente.first_name" name="first_name">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Apellidos</label>
+              <input class="form-control" [(ngModel)]="formPaciente.last_name" name="last_name">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Teléfono</label>
+            <input class="form-control" [(ngModel)]="formPaciente.telefono" name="telefono">
+          </div>
+          <div class="mb-3" *ngIf="modo === 'crear'">
+            <label class="form-label">Contraseña</label>
+            <input class="form-control" [(ngModel)]="formPaciente.password" name="password" type="password">
+            <small class="form-text text-muted">La contraseña es obligatoria al crear un nuevo paciente.</small>
+          </div>
+        </form>
       </div>
-    </ng-container>
-  
-    <!-- ============================= -->
-    <!-- FORMULARIO CREAR / EDITAR     -->
-    <!-- ============================= -->
-    <ng-container *ngIf="mostrandoFormulario">
-      <h4 *ngIf="modo === 'crear'">Añadir Paciente</h4>
-      <h4 *ngIf="modo === 'editar'">Editar Paciente</h4>
-  
-      <form (ngSubmit)="guardarPaciente()" #pacForm="ngForm" class="mt-3">
-        <div class="mb-3">
-          <label class="form-label">Usuario</label>
-          <input class="form-control" [(ngModel)]="formPaciente.username" name="username" required>
-        </div>
-  
-        <div class="mb-3">
-          <label class="form-label">Correo</label>
-          <input class="form-control" [(ngModel)]="formPaciente.email" name="email" type="email">
-        </div>
-  
-        <div class="row">
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Nombres</label>
-            <input class="form-control" [(ngModel)]="formPaciente.first_name" name="first_name">
-          </div>
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Apellidos</label>
-            <input class="form-control" [(ngModel)]="formPaciente.last_name" name="last_name">
-          </div>
-        </div>
-  
-        <div class="mb-3">
-          <label class="form-label">Teléfono</label>
-          <input class="form-control" [(ngModel)]="formPaciente.telefono" name="telefono">
-        </div>
-  
-        <!-- Password solo en modo crear -->
-        <div class="mb-3" *ngIf="modo === 'crear'">
-          <label class="form-label">Contraseña</label>
-          <input class="form-control" [(ngModel)]="formPaciente.password" name="password" type="password">
-        </div>
-  
-        <button class="btn btn-success" type="submit">
+      <div class="card-footer form-actions">
+        <button class="btn btn-secondary" type="button" (click)="cancelarFormulario()">Cancelar</button>
+        <button class="btn btn-success" type="submit" [disabled]="pacForm.invalid" (click)="guardarPaciente()">
+          <i class="bi bi-check-lg me-2"></i>
           {{ modo === 'crear' ? 'Crear Paciente' : 'Guardar Cambios' }}
         </button>
-        <button class="btn btn-secondary ms-2" type="button" (click)="cancelarFormulario()">
-          Cancelar
-        </button>
-      </form>
-    </ng-container>
-  </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
