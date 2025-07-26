@@ -1,0 +1,62 @@
+/* home.css */
+
+/* Contenedor principal para centrar el contenido en la página */
+.home-container {
+  display: flex;
+  align-items: center; /* Centra verticalmente */
+  justify-content: center; /* Centra horizontalmente */
+  min-height: 80vh; /* Ocupa la mayor parte de la altura visible */
+  padding: 2rem;
+  background-color: #f4f7f9; /* Un fondo gris muy sutil y profesional */
+}
+
+/* La tarjeta de bienvenida que contiene el texto */
+.welcome-card {
+  background-color: #ffffff;
+  padding: 3rem 4rem;
+  border-radius: 15px; /* Bordes más redondeados */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); /* Sombra suave para dar profundidad */
+  max-width: 800px;
+  border-top: 5px solid #007bff; /* Un borde superior con el color primario */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transiciones suaves */
+}
+
+/* Efecto al pasar el mouse por encima de la tarjeta */
+.welcome-card:hover {
+  transform: translateY(-8px); /* Eleva la tarjeta ligeramente */
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12); /* Sombra más pronunciada */
+}
+
+/* Estilo para el título principal */
+.welcome-title {
+  font-size: 2.8rem;
+  font-weight: 700; /* Letra más gruesa */
+  color: #2c3e50; /* Un azul oscuro, se ve más serio y corporativo */
+  margin-bottom: 1rem;
+}
+
+/* Estilo para el subtítulo o párrafo de bienvenida */
+.welcome-subtitle {
+  font-size: 1.25rem;
+  color: #5a6a7a; /* Un gris azulado más suave que el título */
+  line-height: 1.6;
+  max-width: 600px; /* Evita que la línea sea demasiado larga */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* --- Diseño Responsivo para Móviles --- */
+@media (max-width: 768px) {
+  .welcome-card {
+    padding: 2.5rem 1.5rem;
+    border-top-width: 4px;
+  }
+
+  .welcome-title {
+    font-size: 2.1rem; /* Título más pequeño en pantallas chicas */
+  }
+
+  .welcome-subtitle {
+    font-size: 1.1rem; /* Subtítulo más pequeño */
+  }
+}
