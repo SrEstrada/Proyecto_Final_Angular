@@ -19,10 +19,8 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
-              {
-                "glob": "**/*",
-                "input": "public"
-              }
+              "src/favicon.ico",
+              "src/assets"
             ],
             "styles": [
               "node_modules/bootstrap/dist/css/bootstrap.min.css",
@@ -79,7 +77,18 @@
             "assets": [
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public",
+                "output": "public"
+              },
+              {
+                "glob": "src/favicon.ico",
+                "input": "src",
+                "output": "src"
+              },
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "src/assets"
               }
             ],
             "styles": [

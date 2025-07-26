@@ -1,62 +1,112 @@
-/* home.css */
+.home-wrapper {
+  padding: 1rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-/* Contenedor principal para centrar el contenido en la página */
-.home-container {
+.home-hero {
   display: flex;
-  align-items: center; /* Centra verticalmente */
-  justify-content: center; /* Centra horizontalmente */
-  min-height: 80vh; /* Ocupa la mayor parte de la altura visible */
-  padding: 2rem;
-  background-color: #f4f7f9; /* Un fondo gris muy sutil y profesional */
+  align-items: center;
+  gap: 3rem;
+  padding: 4rem 0;
 }
 
-/* La tarjeta de bienvenida que contiene el texto */
-.welcome-card {
-  background-color: #ffffff;
-  padding: 3rem 4rem;
-  border-radius: 15px; /* Bordes más redondeados */
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); /* Sombra suave para dar profundidad */
-  max-width: 800px;
-  border-top: 5px solid #007bff; /* Un borde superior con el color primario */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transiciones suaves */
+.hero-text {
+  flex: 1;
 }
 
-/* Efecto al pasar el mouse por encima de la tarjeta */
-.welcome-card:hover {
-  transform: translateY(-8px); /* Eleva la tarjeta ligeramente */
-  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.12); /* Sombra más pronunciada */
+.hero-title {
+  font-size: 3.2rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #2c3e50;
 }
 
-/* Estilo para el título principal */
-.welcome-title {
-  font-size: 2.8rem;
-  font-weight: 700; /* Letra más gruesa */
-  color: #2c3e50; /* Un azul oscuro, se ve más serio y corporativo */
-  margin-bottom: 1rem;
-}
-
-/* Estilo para el subtítulo o párrafo de bienvenida */
-.welcome-subtitle {
+.hero-subtitle {
   font-size: 1.25rem;
-  color: #5a6a7a; /* Un gris azulado más suave que el título */
-  line-height: 1.6;
-  max-width: 600px; /* Evita que la línea sea demasiado larga */
-  margin-left: auto;
-  margin-right: auto;
+  color: #5a6a7a;
+  margin-top: 1rem;
+  margin-bottom: 2.5rem;
 }
 
-/* --- Diseño Responsivo para Móviles --- */
+.hero-image {
+  flex: 1;
+  text-align: center;
+}
+
+.hero-image img {
+  max-width: 100%;
+  border-radius: 15px;
+  box-shadow: 0 15px 40px rgba(44, 62, 80, 0.2);
+}
+
+.features-section {
+  text-align: center;
+  padding: 5rem 0;
+  background-color: #f8f9fa;
+  margin: 0 -2rem;
+  padding: 5rem 2rem;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 3rem;
+}
+
+.features-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.feature-card {
+  background-color: #ffffff;
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.07);
+  flex-basis: 320px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  color: #007bff;
+  margin-bottom: 1.5rem;
+}
+
+.feature-card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 0.75rem;
+}
+
+.feature-card p {
+  color: #5a6a7a;
+  line-height: 1.6;
+}
+
+@media (max-width: 992px) {
+  .home-hero {
+    flex-direction: column;
+    text-align: center;
+    gap: 2rem;
+  }
+}
+
 @media (max-width: 768px) {
-  .welcome-card {
-    padding: 2.5rem 1.5rem;
-    border-top-width: 4px;
+  .hero-title {
+    font-size: 2.5rem;
   }
-
-  .welcome-title {
-    font-size: 2.1rem; /* Título más pequeño en pantallas chicas */
-  }
-
-  .welcome-subtitle {
-    font-size: 1.1rem; /* Subtítulo más pequeño */
+  .section-title {
+    font-size: 2rem;
   }
 }
