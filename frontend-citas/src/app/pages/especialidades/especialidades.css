@@ -1,0 +1,85 @@
+.page-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.page-icon {
+  font-size: 2.5rem;
+  color: #0d6efd;
+}
+
+.page-header h2 {
+  margin: 0;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.card {
+  border: none;
+  border-radius: 12px;
+}
+
+/* Formulario */
+.add-form .input-group {
+  max-width: 500px;
+}
+
+/* Tarjetas de Especialidad */
+.specialty-card {
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0, .05);
+}
+
+.specialty-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0, .1);
+}
+
+.specialty-card .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.specialty-name {
+  color: #2c3e50;
+  font-size: 1.1rem;
+}
+
+.doctors-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #6c757d;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 0.75rem;
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 0.5rem;
+}
+
+.specialty-card .list-group-item {
+  padding-left: 0;
+  padding-right: 0;
+  border: none;
+  background: none;
+  font-size: 0.95rem;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #6c757d;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  margin-top: 1.5rem;
+}
+
+.empty-state .empty-icon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+  color: #ced4da;
+}

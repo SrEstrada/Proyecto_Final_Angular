@@ -1,24 +1,61 @@
-<h2>Especialidades y Médicos</h2>
+<div class="container mt-4 admin-especialidades-page">
+  <header class="page-header">
+    <i class="bi bi-bookmark-star-fill page-icon"></i>
+    <h2>Administrar Especialidades</h2>
+  </header>
 
-<form (ngSubmit)="crearEspecialidad()" #form="ngForm" class="mb-3">
-  <input
-    type="text"
-    name="nuevaEspecialidad"
-    [(ngModel)]="nuevaEspecialidad"
-    placeholder="Nueva especialidad"
-    required
-  />
-  <button type="submit" [disabled]="nuevaEspecialidad.trim() === ''">Agregar</button>
-</form>
+  <!-- FORMULARIO PARA AÑADIR -->
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h5 class="card-title">Añadir Nueva Especialidad</h5>
+      <form (ngSubmit)="crearEspecialidad()" #form="ngForm" class="add-form">
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            name="nuevaEspecialidad"
+            [(ngModel)]="nuevaEspecialidad"
+            placeholder="Ej: Cardiología, Oftalmología..."
+            required
+            (keyup.enter)="crearEspecialidad()"
+          >
+          <button class="btn btn-primary" type="submit" [disabled]="!nuevaEspecialidad || nuevaEspecialidad.trim() === ''">
+            <i class="bi bi-plus-lg me-2"></i>Agregar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
 
-<div *ngFor="let esp of especialidades" class="mb-4">
-  <h4>
-    {{ esp.nombre }}
-    <button (click)="confirmarEliminar(esp.id)" class="btn btn-sm btn-danger">Eliminar</button>
-  </h4>
-  <ul>
-    <li *ngFor="let medico of esp.medicos">
-      {{ medico.nombres }} - {{ medico.correo }}
-    </li>
-  </ul>
+  <!-- LISTADO DE ESPECIALIDADES -->
+  <div *ngIf="especialidades.length === 0" class="empty-state">
+      <i class="bi bi-shield-slash-fill empty-icon"></i>
+      <h4>No hay especialidades registradas</h4>
+      <p>Añade la primera especialidad usando el formulario de arriba.</p>
+  </div>
+
+  <div class="row" *ngIf="especialidades.length > 0">
+    <div class="col-md-6 mb-4" *ngFor="let esp of especialidades">
+      <div class="card specialty-card h-100">
+        <div class="card-header">
+          <span class="specialty-name">{{ esp.nombre }}</span>
+          <button class="btn btn-sm btn-outline-danger" (click)="confirmarEliminar(esp.id)" title="Eliminar Especialidad">
+            <i class="bi bi-trash-fill"></i>
+          </button>
+        </div>
+        <div class="card-body">
+          <h6 class="doctors-title">Médicos en esta especialidad:</h6>
+          <ul *ngIf="esp.medicos.length > 0" class="list-group list-group-flush">
+            <li class="list-group-item" *ngFor="let medico of esp.medicos">
+              <i class="bi bi-person me-2 text-muted"></i>
+              {{ medico.nombres }} <small class="text-muted">({{ medico.correo }})</small>
+            </li>
+          </ul>
+          <div *ngIf="esp.medicos.length === 0" class="text-muted fst-italic mt-2">
+            Aún no hay médicos asignados.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
